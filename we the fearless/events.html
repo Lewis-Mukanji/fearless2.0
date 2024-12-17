@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+<style>
+  /* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #000;
+  color: #fff;
+}
+  .logo-overlay {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+    }
+
+    .logo-overlay img {
+      height: 120px; /* Adjusted size of the logo */
+    }
+
+/* Hero Section */
+.hero-section {
+  background: url('img/Fe1.jpg') center/90% no-repeat;
+  position: relative;
+  height: 100vh;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-content {
+  text-align: center;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+.event-details {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.event-details span {
+  font-size: 1rem;
+  padding: 5px 10px;
+  border: 1px solid #fff;
+  border-radius: 20px;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+.countdown-timer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.countdown-timer div {
+  text-align: center;
+}
+
+.countdown-timer span {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.buy-tickets {
+  background-color: #ff6600;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.buy-tickets:hover {
+  background-color: #cc5200;
+}
+
+/* Collaborators Section */
+.collaborators-section {
+  background: #fff;
+  padding: 20px 0;
+}
+
+.logo-slider {
+  display: flex;
+  gap: 20px;
+  animation: slide 15s linear infinite;
+}
+
+.logo-slider img {
+  width: 100px;
+  height: auto;
+}
+
+/* Keyframes for sliding effect */
+@keyframes slide {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+/* Styles for the Annual Fearless Event Section */
+#fearless-event {
+    background-color: black; /* Black background */
+    color: white; /* White text color */
+    padding: 50px 20px; /* Padding for spacing */
+    text-align: left; /* Left-align text */
+}
+
+#fearless-event .event-container {
+    display: flex;
+    flex-wrap: wrap; /* Makes the layout responsive */
+    align-items: center; /* Center-align items vertically */
+    justify-content: center; /* Center items horizontally */
+    max-width: 1200px; /* Maximum width for content */
+    margin: 0 auto; /* Center the container */
+}
+
+#fearless-event .event-container .video-section {
+    flex: 1; /* Flexible width */
+    min-width: 300px; /* Minimum width for responsiveness */
+    padding: 20px; /* Spacing around the video */
+}
+
+#fearless-event .event-container .video-section video {
+    width: 100%; /* Full width of the container */
+    border-radius: 10px; /* Rounded corners for the video */
+}
+
+#fearless-event .event-container .text-section {
+    flex: 1; /* Flexible width */
+    min-width: 300px; /* Minimum width for responsiveness */
+    padding: 20px; /* Spacing around the text */
+}
+
+#fearless-event .text-section h2 {
+    font-size: 2rem; /* Title font size */
+    font-weight: bold; /* Bold title */
+    margin-bottom: 20px; /* Space below the title */
+}
+
+#fearless-event .text-section h3 {
+    font-size: 1.5rem; /* Subtitle font size */
+    font-weight: normal; /* Regular weight for subtitle */
+    margin-bottom: 15px; /* Space below the subtitle */
+}
+
+#fearless-event .text-section p {
+    font-size: 1rem; /* Font size for paragraphs */
+    line-height: 1.6; /* Line spacing for readability */
+    margin-bottom: 20px; /* Space between paragraphs */
+}
+
+#fearless-event .text-section p span {
+    display: block; /* Display as a block element for separation */
+    margin-bottom: 10px; /* Space between spans */
+}
+
+#fearless-event .text-section strong {
+    font-weight: bold; /* Highlight important text */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #fearless-event .event-container {
+        flex-direction: column; /* Stack video and text vertically on smaller screens */
+    }
+    #fearless-event .text-section h2 {
+        font-size: 1.8rem; /* Slightly smaller title font size */
+    }
+    #fearless-event .text-section h3 {
+        font-size: 1.3rem; /* Slightly smaller subtitle font size */
+    }
+}
+.events-section {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.events-section h2 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.events-section p {
+  font-size: 18px;
+  margin-bottom: 40px;
+}
+
+.events-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 0 20px;
+}
+
+.event-card {
+  background-color: #222;
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.event-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.event-info {
+  position: absolute;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  color: white;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.event-info .date span:first-child {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.event-info .date span:last-child {
+  font-size: 14px;
+}
+
+.more-info-btn {
+  background-color: white;
+  color: black;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.event-description {
+  display: none;
+  padding: 10px;
+  background-color: #333;
+  color: white;
+  font-size: 14px;
+  border-top: 1px solid #444;
+}
+/* Stats Section Styling */
+.stats-section {
+  background-color: #000; /* Black background */
+  padding: 50px 0; /* Top and bottom spacing */
+}
+
+.stats-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto; /* Center the section */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.stat-item {
+  text-align: center;
+  color: #fff; /* White text */
+  margin: 20px;
+}
+
+.stat-item h2 {
+  font-size: 2.5rem;
+  color: #f0c041; /* Golden text color */
+  margin: 10px 0;
+}
+
+.stat-item p {
+  font-size: 1rem;
+  text-transform: uppercase;
+  margin: 5px 0;
+  letter-spacing: 1px;
+}
+
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 10px;
+}
+
+ /* Ticket Cards Section */
+ .ticket-section {
+  padding: 60px 20px;
+  text-align: center;
+  background-color: #000; /* Updated background color to black */
+}
+
+.card-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.card {
+  background-color: #000; /* Keep card background black */
+  padding: 0;
+  border: 1px solid #fff; /* Add a white border for visibility */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2); /* White shadow for a soft glow effect */
+  width: 300px;
+  overflow: hidden;
+  position: relative;
+  text-align: left;
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: orange;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.card-content h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #fff; /* Ensure text stands out on black background */
+}
+
+.card-content p {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: #ddd; /* Softer white for contrast */
+  font-weight: bold; /* Make "Buy early and save 10%" bold */
+}
+
+.card-content span {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #fff; /* Make ticket price bold and white */
+}
+
+.card-content:hover {
+  transform: scale(1.05); 
+  transition: transform 0.3s;
+}
+
+/* Ticket Selection Section */
+.selection-container {
+  margin: 40px auto;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.selection-container select,
+.selection-container input {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.selection-container .total {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 20px;
+  color: #fff; /* Ensure total is visible on black background */
+}
+
+.purchase-btn {
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  background-color: #ff5733;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto;
+}
+
+.purchase-btn:hover {
+  background-color: #ff4500;
+}
+
+
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    background-color:#000;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+  }
+
+  .modal-content input {
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .modal-content button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #ff5733;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+  /* Ticket Section */
+/* General Styles */
+.hidden {
+  display: none;
+}
+/* Ticket Section */
+.ticket-section {
+  text-align: center;
+  background-color: black;
+  padding: 40px 20px;
+}
+
+.thank-you-message {
+  margin-top: 20px;
+}
+
+.thank-you-message p {
+  color: white;
+  font-style: italic;
+  font-size: 1.2rem;
+}
+
+.action-buttons {
+  margin-top: 10px;
+}
+
+.orange-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #ff5733;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin: 10px;
+}
+
+.orange-button:hover {
+  background-color: #ff4500;
+}
+
+/* Schedule Section */
+.event-schedule {
+  padding: 40px 20px;
+  text-align: center;
+  background-color: black;
+  color: white;
+}
+
+.event-schedule h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.tabs {
+  margin-bottom: 20px;
+}
+
+.tab {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #ff5733;
+  color: white;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tab.active {
+  background-color: #ff4500;
+}
+
+.schedule-table {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+.schedule-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.schedule-table th,
+.schedule-table td {
+  padding: 10px;
+  border: 1px solid white;
+  text-align: center;
+}
+
+/* Gallery Section */
+.gallery {
+  padding: 40px 20px;
+  text-align: center;
+  background-color: black;
+  color: white;
+}
+
+.gallery h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.gallery-buttons {
+  margin-top: 20px;
+}
+
+.gallery-button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 5px;
+  background-color: #ff5733;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.gallery-button:hover {
+  background-color: #ff4500;
+}
+
+
+  .testimonial-section {
+    text-align: center;
+    background-color: #000; /* Greyish white background */
+    padding: 0; /* Only vertical padding, no horizontal padding */
+    margin: 0; /* Remove default margins */
+    width: 100%; /* Ensure the section takes up the full width */
+    color: #000000; /* Default text color in black */
+}
+
+.testimonial-section blockquote {
+    font-style: italic;
+    font-size: 1.5rem;
+    line-height: 1.6;
+    color: #fff; /* Make blockquote text black */
+    font-weight: bold; /* Make text bold */
+}
+
+.testimonial-section cite {
+    display: block;
+    margin-top: 10px;
+    color: #fff; /* Make citation black */
+    font-weight: bold; /* Make citation bold */
+}
+
+  .footer {
+    background-color: #222; /* Matches dark theme in screenshot */
+    color: #fff;
+    padding: 40px 20px; /* Increased padding for better spacing */
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.footer .footer-column {
+    flex: 1 1 30%; /* Allows responsive layout */
+    margin: 10px; /* Adds spacing between columns */
+}
+
+.footer .footer-column h4 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.footer .footer-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer .footer-column ul li {
+    margin: 5px 0;
+}
+
+.footer .footer-column ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.footer .footer-column ul li a:hover {
+    color: #ffae00;
+    text-decoration: underline;
+}
+
+.footer .footer-socials {
+    text-align: left;
+    margin-top: 20px;
+}
+
+.footer .footer-socials a {
+    color: #fff;
+    font-size: 1.5rem;
+    margin: 0 10px;
+    text-decoration: none;
+}
+
+.footer .footer-socials a:hover {
+    color: #ffae00;
+}
+
+.footer .footer-copyright {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.footer .footer-copyright span {
+    font-weight: bold;
+}
+
+</style>  
+</head>
+<body>
+  <div class="logo-overlay">
+    <a href="index.html">
+      <img src="img/fl.png" alt="Fearless Logo">
+    </a>
+  </div>
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-overlay">
+      <div class="hero-content">
+        <h1>OUR UPCOMING FEARLESS EVENT</h1>
+        <div class="event-details">
+          <span>📅 August 25-29</span>
+          <span>📍 CMLTI Limuru, KENYA</span>
+          <span>⛪ </span>
+        </div>
+        <p>Embark on a journey of self-discovery as you push your limits.</p>
+        <div class="countdown-timer">
+          <div><span id="days">000</span><p>DAYS</p></div>
+          <div><span id="hours">00</span><p>HOURS</p></div>
+          <div><span id="minutes">00</span><p>MINUTES</p></div>
+          <div><span id="seconds">00</span><p>SECONDS</p></div>
+        </div>
+        <button class="buy-tickets">BE PART OF THE FEARLESS EVENTS TODAY</button>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- Collaborators Logo Section -->
+  <section class="collaborators-section">
+    <div class="logo-slider">
+      <!-- Logos start -->
+      <img src="logo/1f.png" alt="fearless Logo">
+      <img src="logo/cm.jpg" alt="cmm Logo">
+      <img src="logo/tf.jpg" alt="Tearfund Logo">
+      <img src="logo/kp.jpg" alt="Kepro Logo">
+      <img src="logo/dc.jpg" alt="Destiny chapel Logo">
+      <img src="logo/cr.jpg" alt="Crossroads Church Logo">
+      <img src="logo/cbl.jpg" alt="Cbl Logo">
+      <img src="logo/mp.jpg" alt="Visa Logo">
+      <!-- Duplicate logos for smooth scrolling -->
+      <img src="logo/1f.png" alt="fearless Logo">
+      <img src="logo/cm.jpg" alt="cmm Logo">
+      <img src="logo/tf.jpg" alt="Tearfund Logo">
+      <img src="logo/kp.jpg" alt="Kepro Logo">
+      <img src="logo/dc.jpg" alt="Destiny chapel Logo">
+      <img src="logo/cr.jpg" alt="Crossroads Church Logo">
+      <img src="logo/cbl.jpg" alt="Cbl Logo">
+      <img src="logo/mp.jpg" alt="Visa Logo">
+  </div>
+  </section>
+  <section id="fearless-event" style="background-color: black; color: white; padding: 50px 20px; text-align: left;">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; max-width: 1200px; margin: 0 auto;">
+        <!-- Left Side: Video -->
+        <div style="flex: 1; min-width: 300px; padding: 20px;">
+          <video autoplay muted loop style="width: 100%; border-radius: 0; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);">
+            <source src="img/dy.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        
+        </div>
+        <!-- Right Side: Content -->
+        <div style="flex: 1; min-width: 300px; padding: 20px;">
+            <!-- Title -->
+            <h2 style="font-size: 2rem; font-weight: bold; margin-bottom: 20px;">Our Annual Fearless Event</h2>
+            <!-- Subtitle -->
+            <h3 style="font-size: 1.5rem; font-weight: normal; margin-bottom: 15px;">Join Us for the Ultimate Experience</h3>
+            <!-- Description -->
+            <p style="font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">
+                Be part of a transformational event featuring inspiring speakers, worship sessions, and empowering discussions.
+                A once-in-a-lifetime opportunity to connect and grow!
+            </p>
+            <!-- Date and Venue -->
+            <p style="font-size: 1rem; line-height: 1.8;">
+                <span style="display: block; margin-bottom: 10px;">
+                    🗓️ <strong>August 25, 2025 @ 10:00 am - August 29, 2025 @ 1:00 pm</strong>
+                </span>
+                <span style="display: block;">
+                    📍 <strong>Clarence Matheny Ministries, Limuru, Kenya</strong>
+                </span>
+            </p>
+        </div>
+    </div>
+</section>
+
+<section>
+<div class="events-section">
+  <h2>Events</h2>
+  <p>Join us For Life Changing Events Today!!</p>
+  <div class="events-container">
+    <div class="event-card" onclick="toggleDescription(this)">
+      <img src="img/fee.jpeg" alt="Event 1">
+      <div class="event-info">
+        <div class="date">
+          <span>5</span>
+          <span>December</span>
+        </div>
+        <button class="more-info-btn">More Info</button>
+      </div>
+      <div class="event-description">
+        Be part of a transformational event featuring inspiring speakers, worship sessions, and empowering discussions.
+                A once-in-a-lifetime opportunity to connect and grow!
+      </div>
+    </div>
+    <div class="event-card" onclick="toggleDescription(this)">
+      <img src="img/e3.jpg" alt="Event 2">
+      <div class="event-info">
+        <div class="date">
+          <span>7</span>
+          <span>December</span>
+        </div>
+        <button class="more-info-btn">More Info</button>
+      </div>
+      <div class="event-description">
+        Be part of a transformational event featuring inspiring speakers, worship sessions, and empowering discussions.
+                A once-in-a-lifetime opportunity to connect and grow!
+      </div>
+    </div>
+    <div class="event-card" onclick="toggleDescription(this)">
+      <img src="img/e1.jpg" alt="Event 3">
+      <div class="event-info">
+        <div class="date">
+          <span>15</span>
+          <span>December</span>
+        </div>
+        <button class="more-info-btn">More Info</button>
+      </div>
+      <div class="event-description">
+        History and Evolution of Typography lecture with Rizvan Bagirli.
+      </div>
+    </div>
+    <div class="event-card" onclick="toggleDescription(this)">
+      <img src="img/we.jpg" alt="Event 4">
+      <div class="event-info">
+        <div class="date">
+          <span>28</span>
+          <span>December</span>
+        </div>
+        <button class="more-info-btn">More Info</button>
+      </div>
+      <div class="event-description">
+        Inter-Uni Football Tournament: Khazar vs ADU.
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<section class="stats-section">
+  <div class="stats-container">
+    <div class="stat-item">
+      <img src="logo/yt.jpg" alt="Employees Icon" class="stat-icon">
+      <h2>700+</h2>
+      <p>Fearless Youth</p>
+    </div>
+    <div class="stat-item">
+      <img src="logo/cu.jpg" alt="Projects Icon" class="stat-icon">
+      <h2>20+</h2>
+      <p>Churches</p>
+    </div>
+    <div class="stat-item">
+      <img src="logo/wo.jpg" alt="Cities Icon" class="stat-icon">
+      <h2>10+</h2>
+      <p>Countries</p>
+    </div>
+    <div class="stat-item">
+      <img src="logo/ray.jpg" alt="Customers Icon" class="stat-icon">
+      <h2>1000+</h2>
+      <p>Lives Transformed</p>
+    </div>
+  </div>
+</section>
+
+<!-- Ticket Section -->
+<section class="ticket-section">
+  <h2>Purchase TheFearlessMovement Tickets</h2>
+  <div class="card-container">
+    <div class="card">
+      <img src="img/2f.png" alt="Discount Ticket">
+      <div class="badge">10% OFF</div>
+      <div class="card-content">
+        <h3>10% Discount</h3>
+        <p>Buy early and save 10% 
+          on the initial cost</p>
+        <span>Sh. 4500</span>
+      </div>
+    </div>
+    <div class="card">
+      <img src="img/2f.png" alt="Standard Ticket">
+      <div class="badge">Standard</div>
+      <div class="card-content">
+        <h3>Standard Ticket</h3>
+        <p>Regular price ticket</p>
+        <span>Sh. 5000</span>
+      </div>
+    </div>
+    <div class="card">
+      <img src="img/2f.png" alt="Group Ticket">
+      <div class="badge">Best Value</div>
+      <div class="card-content">
+        <h3>Group Ticket</h3>
+        <p>Group ticket which gives access
+          to 4 people</p>
+        <span>Sh. 20000</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="selection-container">
+    <select id="ticket-type">
+      <option value="4500">10% Discount - Sh. 4500</option>
+      <option value="5000">Standard - Sh. 5000</option>
+      <option value="20000">Group Ticket - Sh. 20000</option>
+    </select>
+    <input type="number" id="ticket-quantity" placeholder="Enter quantity" min="1">
+    <div class="total">Total: Sh. <span id="total-cost">0</span></div>
+    <button class="purchase-btn" id="purchase-button">Purchase Tickets</button>
+  </div>
+</section>
+
+<!-- Add Modal HTML -->
+<div class="modal" id="payment-modal">
+  <div class="modal-content">
+    <h3>Complete Your Purchase</h3>
+    <input type="text" id="user-name" placeholder="Full Name" required>
+    <input type="email" id="user-email" placeholder="Email Address" required>
+    <input type="text" id="user-phone" placeholder="Phone Number" required>
+    <button id="pay-button">Pay via MPesa</button>
+  </div>
+</div>
+<section class="ticket-section">
+  <!-- <button class="purchase-ticket">Purchase Ticket</button> -->
+
+  <div class="thank-you-message">
+    <p>
+      <em>Thank you for being part of the fearless movement. View our Event Clender and gallery.</em>
+    </p>
+    <div class="action-buttons">
+      <button class="orange-button" id="schedule-button">Schedule</button>
+      <button class="orange-button" id="gallery-button">Gallery</button>
+    </div>
+  </div>
+
+  <!-- Schedule Section (Initially Hidden) -->
+  <section class="event-schedule hidden" id="event-schedule">
+    <h2>Information of Event Schedules</h2>
+    <div class="tabs">
+      <button class="tab active" data-filter="all">All Events</button>
+      <button class="tab" data-filter="check-in & registration">Check In</button>
+      <button class="tab" data-filter="morning-devotion">Morning Devotion</button>
+      <button class="tab" data-filter="breakfast">Breakfast</button>
+      <button class="tab" data-filter="workshops">Workshops</button>
+      <button class="tab" data-filter="games">Games</button>
+      <button class="tab" data-filter="dinner">Dinner</button>
+      <button class="tab" data-filter="evening-service">Evening Service</button>
+      <button class="tab" data-filter="sleep">Sleep</button>
+    </div>
+    <div class="schedule-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Schedule rows -->
+          <tr data-event="checking-in">
+            <td>12:00-4:00 pm</td>
+            <td>Check In & Registration</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr data-event="breakfast">
+            <td>7:30-8:00 am</td>
+            <td></td>
+            <td>Breakfast</td>
+            <td>Breakfast</td>
+            <td>Breakfast</td>
+            <td>Breakfast</td>
+          </tr>
+          <tr data-event="morning-devotion">
+            <td>8:00-10:30 am</td>
+            <td></td>
+            <td>Morning Devotion</td>
+            <td>Morning Devotion</td>
+            <td>Morning Devotion</td>
+            <td>Morning Devotion</td>
+          </tr>
+          <tr data-event="workshops">
+            <td>11:30-1:00 pm</td>
+            <td></td>
+            <td>Workshops</td>
+            <td>Workshops</td>
+            <td>Workshops</td>
+            <td>Workshops</td>
+          </tr>
+          <tr data-event="games">
+            <td>2:30-5:00 pm</td>
+            <td></td>
+            <td>Games</td>
+            <td>Games</td>
+            <td>Games</td>
+            <td>Games</td>
+          </tr>
+          <tr data-event="dinner">
+            <td>6:30-7:15 pm</td>
+            <td>Dinner</td>
+            <td>Dinner</td>
+            <td>Dinner</td>
+            <td>Dinner</td>
+            <td></td>
+          </tr>
+          <tr data-event="evening-service">
+            <td>7:30-10:00 pm</td>
+            <td>Evening Service</td>
+            <td>Evening Service</td>
+            <td>Evening Service</td>
+            <td>Evening Service</td>
+            <td></td>
+          </tr>
+          <tr data-event="sleep">
+            <td>10:00 pm</td>
+            <td>Sleep</td>
+            <td>Sleep</td>
+            <td>Sleep</td>
+            <td>Sleep</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Gallery Section (Initially Hidden) -->
+  <section class="gallery hidden" id="gallery-section">
+    <h2>Photo Gallery</h2>
+    <p>Select a day to view and download photos:</p>
+    <div class="gallery-buttons">
+      <a href="https://drive.google.com/drive/folders/1YacH0AEKgZOGp_pX_yWRZvFeRRIhdDqz?usp=drive_link" target="_blank" class="gallery-button">Day 1</a>
+      <a href="https://drive.google.com/drive/folders/1RDikkQt7yv5QLTFsQrc7CpC9Ptk2teLh?usp=drive_link" target="_blank" class="gallery-button">Day 2</a>
+      <a href="https://drive.google.com/drive/folders/17EVKk-BPktqEwBgUr6yYUWfcFbD8Aoan?usp=drive_link" target="_blank" class="gallery-button">Day 3</a>
+      <a href="https://drive.google.com/drive/folders/1ppvzs0TKRdv2GetPHhVgHT6F1bsZQrnf?usp=drive_link" target="_blank" class="gallery-button">Day 4</a>
+      <a href="https://drive.google.com/drive/folders/1LENr8Gx6YWN5yyeEM4ntA1SCD0C-6VIc?usp=drive_link" target="_blank" class="gallery-button">Dinner</a>
+    </div>
+  </section>
+</section>
+
+
+<!-- Testimonial Section -->
+<div class="testimonial-section">
+  <blockquote>
+      <p> "Thank you for being a part of The Fearlessmovement events. <br>Your presence, prayers, and support make our gatherings 
+        truly meaningful and uplifting.<br> May the message shared here continue to inspire and guide you in your journey of faith.<br> 
+        We are deeply grateful for your fellowship and look forward to seeing you at future events. 
+        <br>May God's love and peace always be with you! 🙏"</p>
+      <cite>~Pst Justus Mugweru</cite>
+  </blockquote>
+</div>
+
+<!-- Footer Section -->
+<div class="footer">
+  <!-- Left Column -->
+  <div class="footer-column">
+      <h4>The Fearlessmovement</h4>
+      <p>Called to shine; reflecting Christ in a dark world</p>
+      <div class="footer-socials">
+          <a href="https://twitter.com/" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="https://instagram.com/the.fearlessmovement" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.facebook.com/thefearlessmovement" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+          <a href="https://www.tiktok.com/@the.fearless.move" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+      </div>
+  </div>
+
+  <!-- Middle Column -->
+  <div class="footer-column">
+      <h4>Our Store</h4>
+      <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#service">Service</a></li>
+          <li><a href="#contact">Contact</a></li>
+      </ul>
+  </div>
+
+  <!-- Right Column -->
+  <div class="footer-column">
+      <h4>Get In Touch</h4>
+      <ul>
+          <li><i class="fas fa-map-marker-alt"></i> 04, Funzi Road Nairobi</li>
+          <li><i class="fas fa-phone"></i> 0745214040</li>
+          <li><i class="fas fa-phone"></i> 0792173752</li>
+          <li><i class="fas fa-envelope"></i> mukanjilewis94@gmail.com</li>
+      </ul>
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer-copyright">
+      &copy; 2024 <span>The Fearlessmovement</span>. All rights reserved
+  </div>
+</div>
+
+
+<script>
+  // Countdown Timer
+  const eventDate = new Date("August 25, 2025 00:00:00").getTime();
+  
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const timeLeft = eventDate - now;
+  
+    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+  
+    document.getElementById("days").textContent = days.toString().padStart(3, '0');
+    document.getElementById("hours").textContent = hours.toString().padStart(2, '0');
+    document.getElementById("minutes").textContent = minutes.toString().padStart(2, '0');
+    document.getElementById("seconds").textContent = seconds.toString().padStart(2, '0');
+  }
+  
+  // Update the countdown every second
+  setInterval(updateCountdown, 1000);
+  
+  // Initialize the countdown on page load
+  updateCountdown();
+  
+  // Toggle event description
+  function toggleDescription(card) {
+    const description = card.querySelector('.event-description');
+    const isVisible = description.style.display === 'block';
+    description.style.display = isVisible ? 'none' : 'block';
+  }
+  </script>
+  <script>
+    // Update Total Price
+    const ticketType = document.getElementById("ticket-type");
+    const ticketQuantity = document.getElementById("ticket-quantity");
+    const totalCost = document.getElementById("total-cost");
+  
+    function updateTotal() {
+      const price = parseInt(ticketType.value);
+      const quantity = parseInt(ticketQuantity.value) || 0;
+      totalCost.textContent = (price * quantity).toLocaleString();
+    }
+  
+    ticketType.addEventListener("change", updateTotal);
+    ticketQuantity.addEventListener("input", updateTotal);
+  
+    // Purchase Button and Modal Logic
+    const purchaseButton = document.getElementById("purchase-button");
+    const paymentModal = document.getElementById("payment-modal");
+    const payButton = document.getElementById("pay-button");
+  
+    purchaseButton.addEventListener("click", () => {
+      const quantity = parseInt(ticketQuantity.value) || 0;
+      if (quantity > 0) {
+        paymentModal.style.display = "flex"; // Show modal
+      } else {
+        alert("Please select a ticket quantity before proceeding.");
+      }
+    });
+  
+    payButton.addEventListener("click", () => {
+      const name = document.getElementById("user-name").value;
+      const email = document.getElementById("user-email").value;
+      const phone = document.getElementById("user-phone").value;
+  
+      if (!name || !email || !phone) {
+        alert("Please fill in all fields.");
+        return;
+      }
+  
+      // Placeholder for payment logic
+      alert(`Thank you, ${name}! Proceeding to payment via MPesa.`);
+      paymentModal.style.display = "none"; // Close modal
+    });
+  
+    // Close Modal on outside click
+    paymentModal.addEventListener("click", (e) => {
+      if (e.target === paymentModal) {
+        paymentModal.style.display = "none";
+      }
+    });
+  </script>
+  <script>
+    const tabs = document.querySelectorAll(".tab");
+    const rows = document.querySelectorAll(".schedule-table tbody tr");
+  
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+  
+        const filter = tab.dataset.filter;
+  
+        rows.forEach(row => {
+          if (filter === "all" || row.dataset.event.includes(filter)) {
+            row.classList.remove("hidden");
+          } else {
+            row.classList.add("hidden");
+          }
+        });
+      });
+    });
+  </script>
+
+  <script>
+   // Toggle the schedule section
+const scheduleButton = document.getElementById('schedule-button');
+const scheduleSection = document.getElementById('event-schedule');
+
+scheduleButton.addEventListener('click', () => {
+  if (scheduleSection.classList.contains('hidden')) {
+    scheduleSection.classList.remove('hidden');
+    scheduleButton.textContent = 'Hide Schedule';
+  } else {
+    scheduleSection.classList.add('hidden');
+    scheduleButton.textContent = 'Schedule';
+  }
+});
+
+// Toggle the gallery section
+const galleryButton = document.getElementById('gallery-button');
+const gallerySection = document.getElementById('gallery-section');
+
+galleryButton.addEventListener('click', () => {
+  if (gallerySection.classList.contains('hidden')) {
+    gallerySection.classList.remove('hidden');
+    galleryButton.textContent = 'Hide Gallery';
+  } else {
+    gallerySection.classList.add('hidden');
+    galleryButton.textContent = 'Gallery';
+  }
+});
+ </script> 
+ 
+ 
+</body>
+</html>

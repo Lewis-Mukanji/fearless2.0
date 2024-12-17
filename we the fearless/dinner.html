@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fearless Dinners</title>
+    <style>
+        /* Reset and basic styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            font-family: '_Poppins_cd6858', '_Poppins_Fallback_cd6858', Helvetica, Arial, sans-serif;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Slideshow container */
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Each slide */
+        .slide {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Show the first slide */
+        .slide.active {
+            display: block;
+            animation: fade 1s ease;
+        }
+
+        /* Fade animation */
+        @keyframes fade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Left logo styling as a clickable button */
+        .left-logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            height: 80px;
+            width: auto;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        /* Centered title styling */
+        .center-text {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+
+        /* Text overlay for slide description */
+        .text-overlay {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px 20px;
+            border-radius: 5px;
+            z-index: 2;
+        }
+
+        /* Content section below slideshow */
+        .content-section {
+            padding: 40px 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+
+        .content-section h2 {
+            font-size: 1.7rem;
+            color: #000;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .content-section p {
+            font-size: 1.3rem;
+            color: #555;
+            line-height: 1.5;
+            max-width: 100%;
+            text-align: center;
+            margin: 0 auto; 
+            padding: 0 20px; 
+            font-weight: 600;
+        }
+
+        /* Link styling */
+        .google-drive-link {
+            display: inline-block;
+            text-decoration: none;
+            color: #fff;
+            background-color: #460fea;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .google-drive-link:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Slideshow Container -->
+    <div class="slideshow-container">
+        <!-- Slide 1 -->
+        <div class="slide active" style="background-image: url('img/d7.jpg');">
+            <a href="index.html">
+                <img src="img/2f.png" alt="Logo" class="left-logo">
+            </a>
+            <div class="center-text">The Fearless Movement</div>
+            <div class="text-overlay">Welcome to our journey</div>
+        </div>
+        
+        <!-- Slide 2 -->
+        <div class="slide" style="background-image: url('img/d2.jpg');">
+            <a href="index.html">
+                <img src="img/2f.png" alt="Logo" class="left-logo">
+            </a>
+            <div class="center-text">The Fearless Movement</div>
+            <div class="text-overlay">Discover the beauty of each moment</div>
+        </div>
+        
+        <!-- Slide 3 -->
+        <div class="slide" style="background-image: url('img/d8.jpg');">
+            <a href="index.html">
+                <img src="img/2f.png" alt="Logo" class="left-logo">
+            </a>
+            <div class="center-text">The Fearless Movement</div>
+            <div class="text-overlay">Join us and be inspired!</div>
+        </div>
+    </div>
+
+    <!-- Content Section Below Slideshow -->
+    <div class="content-section">
+        <h2>Dinner Night</h2>
+        <p>
+            The Fearless Camp Dinner is a unique Christian gathering designed to celebrate and reflect on the significanceof Godly relationships. 
+            Set in a warm and inviting atmosphere, this event encourages individuals to connect on a deeper level,fostering friendships rooted in faith. 
+            Throughout the evening, guests engage in meaningful discussions on how to build relationships that honor God, gaining valuable insights that strengthen their spiritual journey. 
+            Beyond the inspiring conversations, the dinner offers a chance to make unforgettable memories, enjoy good food, and showcase personal style. 
+            It’s an evening filled with joy, community, and celebration of faith.
+        </p>
+        <a href="https://drive.google.com/drive/folders/1LENr8Gx6YWN5yyeEM4ntA1SCD0C-6VIc?usp=drive_link" target="_blank" class="google-drive-link">View Photos Here</a>
+    </div>
+
+    <!-- JavaScript for Slideshow -->
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll(".slide");
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove("active");
+                if (i === index) slide.classList.add("active");
+            });
+        }
+
+        function startSlideshow() {
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }, 5000); // Change slide every 5 seconds
+        }
+
+        // Start the slideshow
+        startSlideshow();
+    </script>
+
+</body>
+</html>
