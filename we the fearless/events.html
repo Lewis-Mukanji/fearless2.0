@@ -19,16 +19,86 @@ body {
   background-color: #000;
   color: #fff;
 }
-  .logo-overlay {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      z-index: 10;
-    }
+.logo-overlay {
+    position: fixed; /* Change from absolute to fixed */
+    top: 20px;
+    left: 20px;
+    z-index: 1000; /* Ensure it's above other elements */
+}
 
-    .logo-overlay img {
-      height: 120px; /* Adjusted size of the logo */
-    }
+.logo-overlay img {
+    height: 150px; /* Adjusted size of the logo */
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    position: absolute; /* Ensures the navbar stays in place */
+    width: 100%;
+    top: 0;
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+/* Social media icons styling */
+.navbar-top {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-bottom: 5px;
+}
+
+.navbar-top a {
+    color: #fff;
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+/* Logo styling */
+.logo {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.logo a {
+    color: #fff;
+    font-size: 2.0rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.logo img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+/* Nav links */
+.nav-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #ffae00;
+}
+
 
 /* Hero Section */
 .hero-section {
@@ -690,11 +760,27 @@ body {
 </style>  
 </head>
 <body>
+    <!-- Navbar -->
+<div class="navbar">
+  <!-- Logo -->
   <div class="logo-overlay">
-    <a href="index.html">
-      <img src="img/fl.png" alt="Fearless Logo">
-    </a>
+      <a href="index.html">
+        <img src="img/2f.png" alt="Fearless Logo">
+      </a>
+    </div>
+  <!-- Hamburger Menu Icon -->
+  <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+  <!-- Navigation Links -->
+  <div class="nav-links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="events.html">Events</a>
+      <a href="outreach.html">Outreach</a>
+      <a href="merchandise.html">Merchandise</a>
+      <a href="about.html">About us</a>
+      <a href="donations.html">Donations</a>
+      <a href="contact.html">Contact us</a>
   </div>
+</div>
   <!-- Hero Section -->
   <section class="hero-section">
     <div class="hero-overlay">

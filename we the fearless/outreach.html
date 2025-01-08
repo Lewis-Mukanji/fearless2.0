@@ -1,344 +1,408 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Fearless Movement</title>
-    <!-- Link to Font Awesome for social media icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* Reset styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Outreach</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #121212; /* Dark background */
+      color: #ffffff; /* Light text */
+    }
+    .logo-overlay {
+    position: fixed; /* Change from absolute to fixed */
+    top: 20px;
+    left: 20px;
+    z-index: 1000; /* Ensure it's above other elements */
+}
 
-        /* Body styling */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #fff;
-            color: #333;
-        }
+.logo-overlay img {
+    height: 150px; /* Adjusted size of the logo */
+}
 
-        /* Navbar */
-        .navbar {
+/* Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    position: absolute; /* Ensures the navbar stays in place */
+    width: 100%;
+    top: 0;
+    z-index: 1000; /* Ensure it's above other elements */
+    background-color: rgba(0, 0, 0, 0.8); /* Optional: Add a semi-transparent background for better visibility */
+    backdrop-filter: blur(10px); /* Optional: Adds a nice blur effect */
+}
+
+/* Social media icons styling */
+.navbar-top {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-bottom: 5px;
+}
+
+.navbar-top a {
+    color: #fff;
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+/* Logo styling */
+.logo {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.logo a {
+    color: #fff;
+    font-size: 2.0rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.logo img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+/* Nav links */
+.nav-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #ffae00;
+}
+
+    header {
+      background: url('header-image.jpg') no-repeat center center/cover;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header h1 { 
+      font-size: 3rem;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .testimonial-section {
+    text-align: center;
+    background-color: #121212; /* Greyish white background */
+    padding: 0; /* Only vertical padding, no horizontal padding */
+    margin: 0; /* Remove default margins */
+    width: 100%; /* Ensure the section takes up the full width */
+    color: #121212; /* Default text color in black */
+}
+
+.testimonial-section blockquote {
+    font-style: italic;
+    font-size: 1.5rem;
+    line-height: 1.6;
+    color: #fff; /* Make blockquote text black */
+    font-weight: bold; /* Make text bold */
+}
+
+.testimonial-section cite {
+    display: block;
+    margin-top: 10px;
+    color: #fff; /* Make citation black */
+    font-weight: bold; /* Make citation bold */
+}
+    .sermons-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .sermon-card {
+      background-color: #1e1e1e;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .sermon-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .sermon-content {
+      padding: 15px;
+    }
+    .sermon-content h3 {
+      margin: 10px 0;
+      color: #f0c040;
+    }
+    .sermon-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #bbb;
+    }
+    .video-section {
             display: flex;
+            justify-content: center;
             align-items: center;
-            justify-content: space-between;
-            padding: 10px 20px;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            background: none;
-        }
-
-        /* Social media icons styling */
-        .navbar-top {
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-bottom: 5px;
-        }
-
-        .navbar-top a {
+            background-color: #121212;
+            padding: 40px 20px;
             color: #fff;
-            font-size: 1.2rem;
-            text-decoration: none;
         }
 
-        /* Logo styling */
-        .logo {
+        .video-content {
+            max-width: 1200px;
             display: flex;
+            flex-direction: row;
             align-items: center;
-            margin-top: 20px;
-        }
-
-        .logo a {
-            color: #fff;
-            font-size: 2.0rem;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        .logo img {
-            height: 40px;
-            margin-right: 10px;
-        }
-
-        /* Nav links */
-        .nav-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-
-        .nav-links {
-            display: flex;
             gap: 20px;
         }
 
-        .nav-links a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #ffae00;
-        }
-
-        /* Hero Section */
-        .hero-section {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: url('img/fe5.jpg') no-repeat center center;
-            background-size: cover;
-            color: #fff;
-            text-align: center;
-            padding-top: 40px;
-        }
-
-        .hero-section h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
-
-        .hero-section p {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-
-        .join-btn {
-            background-color: #fff;
-            color: #000;
-            border: 2px solid #fff;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .join-btn:hover {
-            background-color: #ffae00;
-            color: #000;
-        }
-
-        /* Event Tabs */
-        .tabs {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            gap: 10px;
-            background-color: #000;
-            padding: 10px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            background-color: #00bfa5;
-            color: #000;
-            cursor: pointer;
-            border-radius: 5px;
-            font-weight: bold;
+        .video-text {
             flex: 1;
-            text-align: center;
-            transition: opacity 0.3s;
-            white-space: nowrap;
-        }
-
-        .tab.active {
-            background-color: #333;
-        }
-
-        /* Event Header */
-        .event-header {
-            text-align: center;
-            color: #fff;
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 20px 0;
-            background-color: #000;
-            padding: 10px;
-            border-radius: 5px;
-
-        }
-
-        /* Event Cards */
-        .event-cards {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            padding: 20px;
-            background-color: #000;
-        }
-
-        .event-card {
-            width: 200px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            position: relative;
-        }
-
-        .event-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .event-card h3 {
-            padding: 10px;
-            font-size: 1.2rem;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #f0f0f0;
-            color: #333;
-        }
-
-        .footer a {
-            color: #333;
-            text-decoration: none;
+            font-family: '_Poppins_cd6858', '_Poppins_Fallback_cd6858', Helvetica, Arial, sans-serif;
+            font-size: 1.5rem;
             font-weight: bold;
         }
-    </style>
+
+        .video-embed {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .video-embed iframe {
+            width: 100%;
+            height: 340px;
+            border: none;
+        }
+        .thank-you-message {
+         margin-top: 20px;
+        }
+
+        .thank-you-message p {
+         color: white;
+         font-style: italic;
+         font-size: 1.2rem;
+}
+/* Footer */
+.footer {
+    background-color: #222; /* Matches dark theme in screenshot */
+    color: #fff;
+    padding: 40px 20px; /* Increased padding for better spacing */
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.footer .footer-column {
+    flex: 1 1 30%; /* Allows responsive layout */
+    margin: 10px; /* Adds spacing between columns */
+}
+
+.footer .footer-column h4 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.footer .footer-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer .footer-column ul li {
+    margin: 5px 0;
+}
+
+.footer .footer-column ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.footer .footer-column ul li a:hover {
+    color: #ffae00;
+    text-decoration: underline;
+}
+
+.footer .footer-socials {
+    text-align: left;
+    margin-top: 20px;
+}
+
+.footer .footer-socials a {
+    color: #fff;
+    font-size: 1.5rem;
+    margin: 0 10px;
+    text-decoration: none;
+}
+
+.footer .footer-socials a:hover {
+    color: #ffae00;
+}
+
+.footer .footer-copyright {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.footer .footer-copyright span {
+    font-weight: bold;
+}
+
+
+    
+  </style>
 </head>
 <body>
+  
+   <!-- Navbar -->
+<div class="navbar">
+  <!-- Logo -->
+  <div class="logo-overlay">
+      <a href="index.html">
+        <img src="img/2f.png" alt="Fearless Logo">
+      </a>
+    </div>
+  <!-- Hamburger Menu Icon -->
+  <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+  <!-- Navigation Links -->
+  <div class="nav-links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="events.html">Events</a>
+      <a href="outreach.html">Outreach</a>
+      <a href="merchandise.html">Merchandise</a>
+      <a href="about.html">About us</a>
+      <a href="donations.html">Donations</a>
+      <a href="contact.html">Contact us</a>
+  </div>
+</div>
 
-    <!-- Navbar -->
-    <div class="navbar">
-        <!-- Logo -->
-        <div class="logo">
-            <a href="#">
-                <img src="" alt="">
-                TheFearlessMovement
-            </a>
+<header>
+  <h1>Outreach</h1>
+</header>
+<section>
+    <div class="testimonial-section">
+        <blockquote>
+            <p>Our Missions and outreach programs are spearheaded by passionate young individuals with a deep hunger to spread 
+              the Gospel and bring many people to Christ. These initiatives are driven by a desire to transform lives, offering hope,
+               compassion, and spiritual guidance to communities in need. Through dynamic events, service projects, and personal
+                interactions, the movement seeks to share God's love and create lasting change. By empowering youth and leveraging
+                 their energy, creativity, and commitment, these missions foster unity and inspire others to join in the great
+                  commission of spreading the Good News far and wide.
+            <cite></cite>
+        </blockquote>
+      </div>
+</section>
+<section>
+<div class="sermons-container">
+  <div class="sermon-card">
+    <img src="img/fe5.jpg" alt="Sermon 1">
+    <div class="sermon-content">
+      <h3>Jesus Came to Bring Joy</h3>
+      <div class="sermon-meta">
+        <span>February 18, 2023</span>
+        <span>CMSEMASTERS</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sermon-card">
+    <img src="img/pj1.jpg" alt="Sermon 2">
+    <div class="sermon-content">
+      <h3>Is "Repent" in the Gospel?</h3>
+      <div class="sermon-meta">
+        <span>February 16, 2023</span>
+        <span>CMSEMASTERS</span>
+      </div>
+    </div>
+  </div>
+</section>
+  <section class="video-section">
+    <div class="video-content">
+        <!-- Text section for the video area -->
+        <div class="video-text">
+            Step Into the Future with The Fearless Movement Mission trips
+            <p>Embark on life-changing missions and outreach programs across the country with us today.</p>
         </div>
-        <!-- Social Media and Nav Links Container -->
-        <div class="nav-container">
-            <!-- Social Media Icons -->
-            <div class="navbar-top">
-                <a href="https://twitter.com/" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                <a href="https://instagram.com/the.fearlessmovement" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://facebook.com/TheFearlessMovement" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-                <a href="https://tiktok.com/" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-            </div>
-            <!-- Navigation Links -->
-            <div class="nav-links">
-                <a href="index.html">Home</a>
-                <a href="events.html">Events</a>
-                <a href="services.html">Services</a>
-                <a href="tickets.html">Tickets</a>
-                <a href="merchandise.html">Merchandise</a>
-                <a href="about.html">About us</a>
-                <a href="contact.html">Contact us</a>
-            </div>
+        <!-- Facebook video embed -->
+        <div class="video-embed">
+            <iframe
+                src="https://www.youtube.com/embed/M2NLS7-u7X4?si=QLnQS1wKBQEWCLxW"
+                allow="autoplay; encrypted-media"
+                allowfullscreen>
+            </iframe>
         </div>
     </div>
+</section>
+  <!-- Add more sermon cards as necessary -->
+</div>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <h1>Welcome to TheFearlessMovement</h1>
-        <p>Called to shine. Reflecting Christ<br>In a dark world</p>
-        <a href="#" class="join-btn">Join us Now</a>
-    </section>
+<div class="footer">
+  <!-- Left Column -->
+  <div class="footer-column">
+      <h4>The Fearlessmovement</h4>
+      <p> Nurturing a fearless generation ready to uplift their communities and inspire the world.</p>
+      <div class="footer-socials">
+          <a href="https://twitter.com/" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="https://instagram.com/the.fearlessmovement" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.facebook.com/thefearlessmovement" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+          <a href="https://www.tiktok.com/@the.fearless.move" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+      </div>
+  </div>
 
-    <!-- Event Tabs -->
-    <!-- <div class="tabs">
-        <div class="tab" onclick="showTab(0)">Tab 1</div>
-        <div class="tab" onclick="showTab(1)">Tab 2</div>
-        <div class="tab" onclick="showTab(2)">Tab 3</div>
-        <div class="tab" onclick="showTab(3)">Tab 4</div>
-        <div class="tab" onclick="showTab(4)">Tab 5</div>
-    </div> -->
+  <!-- Middle Column -->
+  <div class="footer-column">
+      <h4>Our Store</h4>
+      <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#service">Service</a></li>
+          <li><a href="#contact">Contact</a></li>
+      </ul>
+  </div>
 
-    <!-- Event Header -->
-    <div class="event-header">
-        Called to shine: Reflecting Christ<br>In a dark world
-    </div>
+  <!-- Right Column -->
+  <div class="footer-column">
+      <h4>Get In Touch</h4>
+      <ul>
+          <li><i class="fas fa-map-marker-alt"></i> 04, Funzi Road Nairobi</li>
+          <li><i class="fas fa-phone"></i> 0745214040</li>
+          <li><i class="fas fa-phone"></i> 0792173752</li>
+          <li><i class="fas fa-envelope"></i> mukanjilewis94@gmail.com</li>
+      </ul>
+  </div>
 
-    <!-- Event Cards -->
-    <div class="event-cards">
-        <div class="event-card">
-            <img src="img/Fe1.jpg" alt="The Team">
-            <h3>Fearless Team</h3>
-        </div>
-        <div class="event-card">
-            <img src="img/fe4.jpg" alt="Conference">
-            <h3>Conferences</h3>
-        </div>
-        <div class="event-card">
-            <img src="img/fe2.jpg" alt="Games">
-            <h3>Fearless Games</h3>
-        </div>
-        <div class="event-card">
-            <img src="img/fe3.jpg" alt="Dinner Night">
-            <h3>Dinner Night</h3>
-        </div>
-        <div class="event-card">
-            <img src="img/fe4.jpg" alt="Workshops">
-            <h3>Workshops</h3>
-        </div>
-        <div class="event-card">
-            <img src="img/fe4.jpg" alt="Team Building">
-            <h3>Team Building</h3>
-        </div>
-    </div>
+  <!-- Copyright -->
+  <div class="footer-copyright">
+      &copy; 2024 <span>The Fearlessmovement</span>. All rights reserved
+  </div>
+</div>
 
-    <!-- Footer -->
-    <div class="footer">
-        &copy; 2024 TheFearlessMovement. Follow us on 
-        <a href="https://instagram.com/the.fearlessmovement" target="_blank">@the.fearlessmovement</a>
-    </div>
 
-    <!-- JavaScript -->
-    <script>
-        let currentTab = 0;
-        const tabs = document.querySelectorAll('.tab');
-
-        function showTab(index) {
-            // Remove active class from all tabs and hide them
-            tabs.forEach((tab, i) => {
-                tab.classList.remove('active');
-            });
-
-            // Show the selected tab
-            tabs[index].classList.add('active');
-        }
-
-        function startTabSlideshow() {
-            setInterval(() => {
-                currentTab = (currentTab + 1) % tabs.length;
-                showTab(currentTab);
-            }, 3000); // Change tab every 3 seconds
-        }
-
-        // Initialize by showing the first tab and start slideshow
-        showTab(currentTab);
-        startTabSlideshow();
-    </script>
 </body>
 </html>
+
