@@ -5,25 +5,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donation Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
       /* General Styles */
 /* General Styles */
 body {
     margin: 0;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Poppins', sans-serif;
     color: #333;
     background-color: #f5f5f5;
+    overflow-x: hidden;
 }
-.logo-overlay {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      z-index: 10;
+ /* Logo styling */
+ .logo-overlay {
+    position: absolute;
+    top: 0px;
+    left: 40px;
+    z-index: 1001;
+}
+
+.logo-overlay img {
+    height: 120px;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-family: 'Poppins', sans-serif; /* Use Poppins font */
+    padding: 10px 20px;
+    position: relative;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    background: #000;
+    height: 130px;
+}
+
+/* Nav links */
+.nav-links {
+    display: flex;
+    gap: 20px;
+    margin-right: 20px;
+}
+
+.nav-links a {
+    position: relative;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif; /* Use Poppins font */
+    padding: 10px 20px;
+    border-radius: 50px; /* Makes the highlight oval */
+    transition: all 0.3s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    background: #ffae00; /* Highlight background color */
+    color: #000; /* Text color when active or hovered */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Add a shadow for effect */
+}
+
+/* Hamburger menu */
+.hamburger {
+    display: none;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+/* Mobile responsive styles */
+@media screen and (max-width: 768px) {
+    .hamburger {
+        display: block;
+        position: fixed;
+        right: 20px;
+        top: 20px;
+    }
+
+    .nav-links {
+        position: fixed;
+        right: -100%;
+        top: 0;
+        flex-direction: column;
+        background: #000;
+        height: 100vh;
+        width: 250px;
+        padding-top: 80px;
+        transition: 0.3s ease;
+        margin: 0;
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+
+    .nav-links a {
+        padding: 15px 25px;
+        width: 100%;
+        display: block;
     }
 
     .logo-overlay img {
-      height: 140px; /* Adjusted size of the logo */
+        height: 100px;
     }
+}
+
 
 h1, h2, h3 {
     margin: 0;
@@ -243,13 +334,30 @@ button.donate-now:hover {
 
 </head>
 <body>
-  <header>
+ <!-- Navbar -->
+<div class="navbar">
+    <!-- Logo -->
     <div class="logo-overlay">
         <a href="index.html">
-          <img src="img/2f.png" alt="Fearless Logo">
+            <img src="img/2f.png" alt="Fearless Logo">
         </a>
-      </div>
-</header>
+    </div>
+    
+    <!-- Navigation Links -->
+    <div class="nav-links" id="nav-links">
+        <a href="index.html">Home</a>
+        <a href="events.html">Events</a>
+        <a href="outreach.html">Outreach</a>
+        <a href="merchandise.html">Merchandise</a>
+        <a href="about.html">About us</a>
+        <a href="donations.html" class="active">Donations</a>
+        <a href="contact.html">Contact us</a>
+    </div>
+    
+    <!-- Hamburger Menu Icon -->
+    <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+  </div>
+  
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-content">
@@ -286,10 +394,10 @@ button.donate-now:hover {
                             <option value="individual">Individual</option>
                             <option value="corporate">Group</option>
                         </select>
-                        <select>
+                        <select id="paymentMethod">
                             <option value="">Donation Payment</option>
-                            <option value="paypal">Mpesa</option>
-                            <option value="credit_card">PayPal</option>
+                            <option value="mpesa">Mpesa</option>
+                            <option value="paypal">PayPal</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -297,7 +405,8 @@ button.donate-now:hover {
                         <input type="range" id="donation-total" min="1" max="1000">
                         <span>Total Donation</span>
                     </div>
-                    <button type="submit" class="donate-now">Donate Now</button>
+                    <!-- Option 1: Using onclick attribute -->
+                   <button type="button" class="donate-now" onclick="handleDonation()">Donate Now</button>
                 </form>
             </div>
         </div>
@@ -386,6 +495,41 @@ button.donate-now:hover {
       </div>
   </footer>
 
+  <script>
+    function toggleMenu() {
+        const navLinks = document.getElementById('nav-links');
+        navLinks.classList.toggle('active');
+    }
+    </script>
+
+    <script>
+
+function handleDonation() {
+    const paymentMethod = document.getElementById('paymentMethod');
+    
+    if (!paymentMethod) {
+        alert('Error: Payment method selection not found');
+        return;
+    }
+
+    if (paymentMethod.value === 'paypal') {
+        window.location.href = 'paypal.html';
+    } else if (paymentMethod.value === 'mpesa') {
+        alert('Proceed with Mpesa payment.');
+    } else {
+        alert('Please select a payment method.');
+    }
+}
+
+// Add event listener when the document loads
+document.addEventListener('DOMContentLoaded', function() {
+    const donateButton = document.querySelector('.donate-now');
+    if (donateButton) {
+        donateButton.addEventListener('click', handleDonation);
+    }
+});
+    </script>
+  
     <!-- JavaScript for FAQ Dropdown -->
     <script>
         document.querySelectorAll('.faq-item h3').forEach((faqHeader) => {
