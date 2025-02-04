@@ -1,23 +1,19 @@
 const express = require('express');
+const sendEmail = require('../mailer'); // Import mailer function
 const router = express.Router();
-const db = require('../config/db'); // Ensure your DB config is correctly imported
 
-// POST route for contact form
-router.post('/contactus', async (req, res) => {
-    const { email, phone, name, message } = req.body;
+router.post('/send-email', async (req, res) => {
+    const { to, subject, text, html } = req.body;
 
-    if (!email || !phone || !name || !message) {
-        return res.status(400).json({ error: "All fields are required" });
+    if (!to || !subject || !text) {
+        return res.status(400).json({ error: 'Missing required fields' });
     }
 
     try {
-        // Insert the data into your database
-        const sql = "INSERT INTO contact (email, phone, name, message) VALUES (?, ?, ?, ?)";
-        await db.promise().query(sql, [email, phone, name, message]);
-        res.status(200).json({ success: "Your message has been sent!" });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Something went wrong!" });
+        const emailResponse = await sendEmail(to, subject, text, html);
+        res.status(200).json({ message: 'Email sent successfully', response: emailResponse });
+    } catch (error) {
+        res.status(500).json({ error: 'Error sending email', details: error.message });
     }
 });
 

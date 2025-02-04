@@ -174,8 +174,11 @@
 
         .form-section {
             max-width: 800px;
-            margin: 0 auto 40px;
+            margin: 0 auto;
             text-align: left;
+            padding: 20px;
+            background: #222;
+            border-radius: 8px;
         }
 
         .form-section h3 {
@@ -192,11 +195,11 @@
         .form-section form input,
         .form-section form textarea {
             width: 100%;
-            padding: 15px;
-            margin-bottom: 20px;
+            padding: 10px;
+            margin-bottom: 15px;
             border: 1px solid #444;
-            border-radius: 8px;
-            background: #222;
+            border-radius: 5px;
+            background: #333;
             color: #fff;
         }
 
@@ -354,17 +357,17 @@
                 We're excited to welcome you and assist you in person!</p>
         </div> 
     </div>
-
     <div class="form-section">
         <h3>Get In Touch!!</h3>
-        <p>info....</p>
-        <form>
-            <input type="text" placeholder="Email">
-            <input type="text" placeholder="Phone">
-            <input type="text" placeholder="Name">
-            <textarea placeholder="Message"></textarea>
+        <p>Fill out the form and we'll get back to you soon.</p>
+        <form id="contactForm">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <input type="text" name="phone" placeholder="Your Phone" required>
+            <textarea name="message" placeholder="Your Message" required></textarea>
             <button type="submit">Submit</button>
         </form>
+        <p id="responseMessage"></p>
     </div>
 
     <div class="map">
@@ -424,7 +427,58 @@
         const navLinks = document.getElementById('nav-links');
         navLinks.classList.toggle('active');
     }
-    </script>
+
+    document.getElementById("contactForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        
+        // Get form values
+        const formData = {
+            name: this.elements.name.value,
+            email: this.elements.email.value,
+            phone: this.elements.phone.value,
+            message: this.elements.message.value
+        };
+
+        // Show loading state
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.textContent;
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sending...';
+        
+        // Clear previous message
+        const responseMessage = document.getElementById("responseMessage");
+        responseMessage.textContent = '';
+        
+        fetch("http://localhost:5000/api/submit-form", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                responseMessage.style.color = '#4CAF50';
+                responseMessage.textContent = "Thank you! Your message has been sent successfully.";
+                this.reset(); // Clear form
+            } else {
+                responseMessage.style.color = '#f44336';
+                responseMessage.textContent = data.message || "Error sending message. Please try again.";
+            }
+        })
+        .catch(error => {
+            responseMessage.style.color = '#f44336';
+            responseMessage.textContent = "Error sending message. Please try again later.";
+            console.error('Error:', error);
+        })
+        .finally(() => {
+            // Restore button state
+            submitButton.disabled = false;
+            submitButton.textContent = originalButtonText;
+        });
+    });
+</script>
 
 </body>
 </html>

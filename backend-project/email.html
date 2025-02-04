@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form Submission</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-bottom: 2px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 24px;
+        }
+        .contact-info {
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .info-item {
+            margin-bottom: 10px;
+        }
+        .label {
+            font-weight: bold;
+            color: #6c757d;
+        }
+        .message-body {
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+        }
+        .message-content {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Contact Form Submission</h1>
+    </div>
+    
+    <div class="contact-info">
+        <div class="info-item">
+            <span class="label">Name:</span>
+            <span>{name}</span>
+        </div>
+        <div class="info-item">
+            <span class="label">Email:</span>
+            <span>{email}</span>
+        </div>
+        <div class="info-item">
+            <span class="label">Phone:</span>
+            <span>{phone}</span>
+        </div>
+    </div>
+    
+    <div class="message-body">
+        <div class="label">Message:</div>
+        <div class="message-content">
+            {message}
+        </div>
+    </div>
+</body>
+</html>

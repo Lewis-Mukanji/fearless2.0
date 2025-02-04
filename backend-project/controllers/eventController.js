@@ -1,5 +1,5 @@
 // eventsController.js
-const sendEmail = require('../mailer/mailer'); // Import the sendEmail function
+const sendEmail = require('../mailer'); // Import the sendEmail function
 
 exports.purchaseTicket = async (req, res) => {
   const { name, email } = req.body;
