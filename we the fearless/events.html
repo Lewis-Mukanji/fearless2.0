@@ -955,26 +955,27 @@ body {
   <div class="stats-container">
     <div class="stat-item">
       <img src="logo/yt.jpg" alt="Employees Icon" class="stat-icon">
-      <h2>700+</h2>
+      <h2 class="counter" data-target="1000">0</h2>
       <p>Fearless Youth</p>
     </div>
     <div class="stat-item">
       <img src="logo/cu.jpg" alt="Projects Icon" class="stat-icon">
-      <h2>20+</h2>
+      <h2 class="counter" data-target="20">0</h2>
       <p>Churches</p>
     </div>
     <div class="stat-item">
       <img src="logo/wo.jpg" alt="Cities Icon" class="stat-icon">
-      <h2>10+</h2>
+      <h2 class="counter" data-target="10">0</h2>
       <p>Countries</p>
     </div>
     <div class="stat-item">
       <img src="logo/ray.jpg" alt="Customers Icon" class="stat-icon">
-      <h2>1000+</h2>
+      <h2 class="counter" data-target="1000">0</h2>
       <p>Lives Transformed</p>
     </div>
   </div>
 </section>
+
 
 <!-- Ticket Section -->
 <section class="ticket-section">
@@ -1240,6 +1241,46 @@ body {
   
   // Initialize the countdown on page load
   updateCountdown();
+
+
+  //stat countdown section 
+  document.addEventListener("DOMContentLoaded", () => {
+  const counters = document.querySelectorAll(".counter");
+
+  const startCount = (counter) => {
+    const target = +counter.getAttribute("data-target");
+    let count = 0;
+    const increment = target / 100; // Adjust speed
+
+    const updateCounter = () => {
+      count += increment;
+      counter.innerText = Math.ceil(count);
+
+      if (count < target) {
+        requestAnimationFrame(updateCounter);
+      } else {
+        counter.innerText = target; // Ensure it stops exactly at target
+      }
+    };
+
+    updateCounter();
+  };
+
+  const observer = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          startCount(entry.target);
+          observer.unobserve(entry.target); // Prevent multiple triggers
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+
+  counters.forEach((counter) => observer.observe(counter));
+});
+
   
   // Toggle event description
   function toggleDescription(card) {

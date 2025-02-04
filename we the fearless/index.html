@@ -465,6 +465,21 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for a lifted effect */
 }
 
+/* Event Description */
+.event-description {
+    text-align: center;
+    color: #333; /* Dark gray for readability */
+    font-size: 1.2rem; /* Moderate font size */
+    margin: 20px auto; /* Space around the description */
+    padding: 15px 20px; /* Padding for better spacing */
+    max-width: 1000px; /* Limit the width for better readability */
+    line-height: 1.6; /* Increase line spacing for readability */
+    background-color: #f9f9f9; /* Light gray background */
+    border-radius: 0px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a modern look */
+    font-family: 'Poppins', sans-serif; 
+}
+
         /* Event Cards */
 .event-cards {
     display: flex;
@@ -570,9 +585,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #000;
+            background-color: #fff;
             padding: 40px 20px;
-            color: #fff;
+            color: #000;
         }
 
         .video-content {
@@ -707,21 +722,29 @@ hr {
   font-family: 'Poppins', sans-serif; /* Use Poppins font */
   background-color: #fff; /* White background */
   color: #000; /* Black text color */
-  max-width: 800px;
+  max-width: 100%; /* Extend full width */
   margin: 0 auto; /* Center the section */
 }
 
 .impact-heading {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: bold;
   margin-bottom: 30px;
-  text-align: left;
+  text-align: center;
 }
 
-.impact-item {
+.impact-container {
+  display: flex;
+  justify-content: space-between; /* Space elements across the section */
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.impact-column {
+  flex: 1; /* Each column takes equal space */
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 }
 
 .impact-item h3 {
@@ -742,7 +765,45 @@ hr {
   border-top: 1px solid #ddd; /* Light gray line */
   margin: 20px 0;
 }
+/* Stats Section Styling */
+.stats-section {
+  background-color: #fff; /* Black background */
+  padding: 50px 0; /* Top and bottom spacing */
+}
 
+.stats-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto; /* Center the section */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.stat-item {
+  text-align: center;
+  color: #000; /* White text */
+  margin: 20px;
+}
+
+.stat-item h2 {
+  font-size: 2.5rem;
+  color: #f0c041; /* Golden text color */
+  margin: 10px 0;
+}
+
+.stat-item p {
+  font-size: 1rem;
+  text-transform: uppercase;
+  margin: 5px 0;
+  letter-spacing: 1px;
+}
+
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 10px;
+}
 
         /* Mission and Store Section */
 /* Mission and Store Section */
@@ -973,7 +1034,7 @@ hr {
     <!-- Hero Section -->
 <section class="hero-section">
     <video autoplay muted loop playsinline class="hero-video">
-        <source src="img/0122.mp4" type="video/mp4">
+        <source src="img/fearrr.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
     <div class="hero-overlay">
@@ -981,19 +1042,19 @@ hr {
             <div class="slide-text active">
                 <h1 class="main-title">Welcome to TheFearlessMovement </h1>
                 <!-- <div class="subtitle">Called to shine</div> -->
-                <div class="description">Empowering young people to walk in unwavering faith</div>
+                <div class="description">"Empowering young people to walk in unwavering faith"</div>
                 <a href="about.html" class="cta-button">Learn More</a>
             </div>
             <div class="slide-text">
                 <!-- <h1 class="main-title">Transforming Lives</h1> -->
                 <div class="subtitle">Called to shine</div>
-                <div class="description">Building a community of fearless believers</div>
+                <div class="description">"Building a community of fearless believers"</div>
                 <a href="events.html" class="cta-button">Join Us</a>
             </div>
             <div class="slide-text">
                 <!-- <h1 class="main-title">Make an Impact</h1> -->
                 <div class="subtitle">Reflecting Christ in a dark world</div>
-                <div class="description">Together we can make a difference</div>
+                <div class="description">"Together we can make a difference"</div>
                 <a href="contact.html" class="cta-button">Get Involved</a>
             </div>
         </div>
@@ -1014,7 +1075,7 @@ hr {
           <img src="logo/dc.jpg" alt="Destiny chapel Logo">
           <img src="logo/cr.jpg" alt="Crossroads Church Logo">
           <img src="logo/cbl.jpg" alt="Mpesa Logo">
-          <img src="logo/mp.jpg" alt="Visa Logo">
+          <!-- <img src="logo/mp.jpg" alt="Visa Logo"> -->
           <!-- Duplicate logos for smooth scrolling -->
           <img src="logo/1f.png" alt="fearless Logo">
           <img src="logo/cm.jpg" alt="cmm Logo">
@@ -1023,43 +1084,76 @@ hr {
           <img src="logo/dc.jpg" alt="Destiny chapel Logo">
           <img src="logo/cr.jpg" alt="Crossroads Church Logo">
           <img src="logo/cbl.jpg" alt="Mpesa Logo">
-          <img src="logo/mp.jpg" alt="Visa Logo">
+          <!-- <img src="logo/mp.jpg" alt="Visa Logo"> -->
       </div>
   </section>
   
   <section class="impact-section">
-    <h2 class="impact-heading">Our impact</h2>
-    <div class="impact-item">
-      <h3>1000+ Youths involved</h3>
-      <p>We are blessed to have over 1000 youths actively participating in our events, which are designed to inspire, 
-        educate, and empower young Christians. Our events include dynamic worship sessions, impactful sermons, engaging workshops,
-         and various outreach activities. These gatherings not only foster spiritual growth and strengthen faith,
-          but also build a sense of community among the youth.</p>
+    <h2 class="impact-heading">Our Impact</h2>
+    <!-- <section class="stats-section"> -->
+      <div class="stats-container">
+        <div class="stat-item">
+          <img src="logo/yt.jpg" alt="Employees Icon" class="stat-icon">
+          <h2 class="counter" data-target="1000">0</h2>
+          <p>Fearless Youth</p>
+        </div>
+        <div class="stat-item">
+          <img src="logo/cu.jpg" alt="Projects Icon" class="stat-icon">
+          <h2 class="counter" data-target="20">0</h2>
+          <p>Churches</p>
+        </div>
+        <div class="stat-item">
+          <img src="logo/wo.jpg" alt="Cities Icon" class="stat-icon">
+          <h2 class="counter" data-target="10">0</h2>
+          <p>Countries</p>
+        </div>
+        <div class="stat-item">
+          <img src="logo/ray.jpg" alt="Customers Icon" class="stat-icon">
+          <h2 class="counter" data-target="1000">0</h2>
+          <p>Lives Transformed</p>
+        </div>
+      </div>
+    <!-- </section> -->
+    <div class="impact-container">
+        <!-- Left Column -->
+        <div class="impact-column">
+            <div class="impact-item">
+                <h3>1000+ Youths involved</h3>
+                <p>We are blessed to have over 1000 youths actively participating in our events, which are designed to inspire, 
+                    educate, and empower young Christians. Our events include dynamic worship sessions, impactful sermons, engaging workshops,
+                    and various outreach activities. These gatherings not only foster spiritual growth and strengthen faith,
+                    but also build a sense of community among the youth.</p>
+            </div>
+            <hr />
+            <div class="impact-item">
+                <h3>20+ Partners</h3>
+                <p>We are incredibly grateful for the support of over 20 sponsors who generously contribute to our mission. 
+                    These sponsors, ranging from local businesses to larger organizations, provide essential resources that
+                    enable us to hold impactful events, carry out mission trips, and support our charity work.</p>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="impact-column">
+            <div class="impact-item">
+                <h3>1000+ Lives Transformed</h3>
+                <p>We are humbled and grateful to have witnessed the transformation of over 1000 lives through our missions and events.
+                    These transformations are a testament to the power of faith, community, and dedicated service. 
+                    Our missions and events provide opportunities for individuals to experience spiritual growth, 
+                    receive much-needed support, and find a sense of belonging.</p>
+            </div>
+            <hr />
+            <div class="impact-item">
+                <h3>10+ Countries</h3>
+                <p>Our organization is blessed to have a global reach, impacting over 10 countries across Africa and the world.
+                    Our missions and events extend to various regions, bringing hope, support, and the message of God’s love to diverse communities.
+                    From remote villages in Africa to urban centers across continents, our dedicated teams work tirelessly to address local needs, 
+                    provide humanitarian aid, and share the Gospel.</p>
+            </div>
+        </div>
     </div>
-    <hr />
-    <div class="impact-item">
-      <h3>20+ partners</h3>
-      <p>We are incredibly grateful for the support of over 20 sponsors who generously contribute to our mission. 
-        These sponsors, ranging from local businesses to larger organizations, provide essential resources that
-         enable us to hold impactful events, carry out mission trips, and support our charity work.</p>
-    </div>
-    <hr />
-    <div class="impact-item">
-      <h3>1000+ Lives Trasformed</h3>
-      <p>We are humbled and grateful to have witnessed the transformation of over 1000 lives through our missions and events.
-         These transformations are a testament to the power of faith, community, and dedicated service. 
-         Our missions and events provide opportunities for individuals to experience spiritual growth, 
-         receive much-needed support, and find a sense of belonging.</p>
-    </div>
-    <hr />
-    <div class="impact-item">
-      <h3>10+ Countries </h3>
-      <p>Our organization is blessed to have a global reach, impacting over 10 countries across Africa and the world.
-         Our missions and events extend to various regions, bringing hope, support, and the message of God’s love to diverse communities.
-          From remote villages in Africa to urban centers across continents, our dedicated teams work tirelessly to address local needs, 
-          provide humanitarian aid, and share the Gospel</p>
-    </div>
-  </section>
+</section>
+
   <!-- Mission and Online Store Section -->
 <section class="mission-store-section">
     <div class="container">
@@ -1148,6 +1242,16 @@ hr {
         Our Annual Fearless Camp
     </div>
 
+    <!-- Event Description -->
+<div class="event-description">
+  Welcome to our Annual Fearless Camp — a week-long, faith-filled journey designed to inspire, empower, and connect!  
+    This is not just any camp; it’s a life-changing experience where you’ll encounter the Holy Spirit, build meaningful connections with other youth, and take part in activities that leave a lasting impact.  
+
+    From transformative workshops to thrilling games, exciting events, and a memorable dinner night, there’s something for everyone.  
+    Take a moment to explore the activities showcased in the cards below — each one offering a glimpse into the incredible moments that await you at Fearless Camp.  
+
+    Don’t miss this opportunity to grow spiritually, make lifelong friends, and create unforgettable memories. We can’t wait to see you there!
+</div>
     <!-- Event Cards -->
     <div class="event-cards">
       <a href="workshops.html" class="event-card-link">
@@ -1232,42 +1336,6 @@ hr {
       </div>
     </section>
 
-<!-- <section class="impact-section">
-  <h2 class="impact-heading">Our impact</h2>
-  <div class="impact-item">
-    <h3>1000+ Youths involved</h3>
-    <p>We are blessed to have over 1000 youths actively participating in our events, which are designed to inspire, 
-      educate, and empower young Christians. Our events include dynamic worship sessions, impactful sermons, engaging workshops,
-       and various outreach activities. These gatherings not only foster spiritual growth and strengthen faith,
-        but also build a sense of community among the youth.</p>
-  </div>
-  <hr />
-  <div class="impact-item">
-    <h3>20+ partners</h3>
-    <p>We are incredibly grateful for the support of over 20 sponsors who generously contribute to our mission. 
-      These sponsors, ranging from local businesses to larger organizations, provide essential resources that
-       enable us to hold impactful events, carry out mission trips, and support our charity work.</p>
-  </div>
-  <hr />
-  <div class="impact-item">
-    <h3>1000+ Lives Trasformed</h3>
-    <p>We are humbled and grateful to have witnessed the transformation of over 1000 lives through our missions and events.
-       These transformations are a testament to the power of faith, community, and dedicated service. 
-       Our missions and events provide opportunities for individuals to experience spiritual growth, 
-       receive much-needed support, and find a sense of belonging.</p>
-  </div>
-  <hr />
-  <div class="impact-item">
-    <h3>10+ Countries </h3>
-    <p>Our organization is blessed to have a global reach, impacting over 10 countries across Africa and the world.
-       Our missions and events extend to various regions, bringing hope, support, and the message of God’s love to diverse communities.
-        From remote villages in Africa to urban centers across continents, our dedicated teams work tirelessly to address local needs, 
-        provide humanitarian aid, and share the Gospel</p>
-  </div>
-</section>
-    -->
-      
-    
 <section class="join-us-section">
         <img src="img/fe6.jpg" alt="Join Us Image">
         <div class="join-us-content">
@@ -1414,6 +1482,8 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   }
 
+  
+
   // Automatic Slideshow for Images
   let currentSlide = 0;
 
@@ -1437,6 +1507,45 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initialize the slideshow
   showSlides();
   startSlideshow();
+
+  //stat countdown section 
+  document.addEventListener("DOMContentLoaded", () => {
+  const counters = document.querySelectorAll(".counter");
+
+  const startCount = (counter) => {
+    const target = +counter.getAttribute("data-target");
+    let count = 0;
+    const increment = target / 100; // Adjust speed
+
+    const updateCounter = () => {
+      count += increment;
+      counter.innerText = Math.ceil(count) + "+"; // Append "+" after number
+
+      if (count < target) {
+        requestAnimationFrame(updateCounter);
+      } else {
+        counter.innerText = target + "+"; // Ensure final number has "+"
+      }
+    };
+
+    updateCounter();
+  };
+
+  const observer = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          startCount(entry.target);
+          observer.unobserve(entry.target); // Prevent multiple triggers
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+
+  counters.forEach((counter) => observer.observe(counter));
+});
+
 </script>
 
     

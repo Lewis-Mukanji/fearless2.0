@@ -4,7 +4,7 @@ const db = require('../db/connection');
 
 // Example route: Fetch all users
 router.get('/users', (req, res) => {
-    const sql = 'SELECT * FROM users'; // Replace 'users' with your table name
+    const sql = 'SELECT * FROM tickets'; // Replace 'users' with your table name
     db.query(sql, (err, results) => {
         if (err) {
             return res.status(500).json({ error: err.message });
