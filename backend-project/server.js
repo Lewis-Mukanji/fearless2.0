@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mysql = require('mysql2');
-const sendEmail = require('./mailer'); // Import mailer function
+const sendEmail = require('./mailer');
 require('dotenv').config();
 
 const app = express();
@@ -30,22 +30,36 @@ db.connect((err) => {
 app.use(cors());
 app.use(bodyParser.json());
 
-// Route to send general emails (existing route)
+// Route to send general emails
 app.post('/api/send-email', async (req, res) => {
     try {
-        const { to, subject, text, html } = req.body;
-        if (!to || !subject || (!text && !html)) {
-            return res.status(400).json({ success: false, message: 'Missing required fields' });
-        }
+        const { to, subject, name, email, phone, message } = req.body;
         
-        await sendEmail(to, subject, text, html);
+        // Validate required fields
+        if (!to || !subject || !name || !email || !message) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Missing required fields. Please provide to, subject, name, email, and message.' 
+            });
+        }
+
+        // Prepare template data
+        const templateData = {
+            name,
+            email,
+            phone: phone || 'Not provided',
+            message
+        };
+        
+        await sendEmail(to, subject, templateData);
         res.status(200).json({ success: true, message: 'Email sent successfully' });
     } catch (error) {
+        console.error('Error sending email:', error);
         res.status(500).json({ success: false, message: 'Failed to send email', error: error.message });
     }
 });
 
-// ✅ Handle form submissions, send email, and save to MySQL
+// Handle form submissions, send email, and save to MySQL
 db.query(`CREATE TABLE IF NOT EXISTS emails (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -63,21 +77,22 @@ app.post('/api/submit-form', async (req, res) => {
             return res.status(400).json({ success: false, message: 'All fields are required' });
         }
 
-        // Email details
-        const subject = `New Contact Form Submission from ${name}`;
-        const text = `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}`;
-        const html = `
-            <h2>Contact Form Submission</h2>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Phone:</strong> ${phone}</p>
-            <p><strong>Message:</strong> ${message}</p>
-        `;
+        // Prepare template data
+        const templateData = {
+            name,
+            email,
+            phone,
+            message
+        };
 
         // Send email
-        await sendEmail(process.env.RECEIVER_EMAIL || 'mukanjilewis94@gmail.com', subject, text, html);
+        await sendEmail(
+            process.env.RECEIVER_EMAIL || 'mukanjilewis94@gmail.com',
+            `New Contact Form Submission from ${name}`,
+            templateData
+        );
 
-        // ✅ Insert data into MySQL database
+        // Insert data into MySQL database
         const sql = 'INSERT INTO emails (name, email, phone, message) VALUES (?, ?, ?, ?)';
         db.query(sql, [name, email, phone, message], (err, result) => {
             if (err) {

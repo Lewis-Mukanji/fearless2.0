@@ -3,26 +3,25 @@ const fs = require('fs').promises;
 const path = require('path');
 require('dotenv').config();
 
-// Step 1: Create a transporter object
+// Create transporter object
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER,  // Your Gmail address
-    pass: process.env.EMAIL_PASS,  // App password (from .env)
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
 // Function to read and populate the HTML template
 const getEmailTemplate = async (templateData) => {
   try {
-    // Read the HTML template file
     let template = await fs.readFile(path.join(__dirname, 'email.html'), 'utf8');
     
     // Replace placeholders with actual data
-    template = template.replace('{name}', templateData.name || '');
-    template = template.replace('{email}', templateData.email || '');
-    template = template.replace('{phone}', templateData.phone || '');
-    template = template.replace('{message}', templateData.message || '');
+    template = template.replace(/{name}/g, templateData.name || '');
+    template = template.replace(/{email}/g, templateData.email || '');
+    template = template.replace(/{phone}/g, templateData.phone || '');
+    template = template.replace(/{message}/g, templateData.message || '');
     
     return template;
   } catch (error) {
@@ -34,12 +33,11 @@ const getEmailTemplate = async (templateData) => {
 // Enhanced function to send emails with HTML template
 const sendEmail = async (to, subject, templateData) => {
   try {
-    // Get populated HTML template
     const htmlContent = await getEmailTemplate(templateData);
     
     // Create plain text version
     const textContent = `
-Contact Form Submission
+Contact Form Submission from About Page
 
 Name: ${templateData.name}
 Email: ${templateData.email}
@@ -53,12 +51,13 @@ ${templateData.message}
       from: process.env.EMAIL_USER,
       to: to,
       subject: subject,
-      text: textContent,  // Fallback plain text version
-      html: htmlContent,  // HTML version
+      text: textContent,
+      html: htmlContent,
+      replyTo: templateData.email // Add reply-to header with the sender's email
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent:', info.response);
+    console.log('Email sent successfully:', info.response);
     return info;
   } catch (error) {
     console.error('Error sending email:', error);
@@ -66,5 +65,4 @@ ${templateData.message}
   }
 };
 
-// Export the function
 module.exports = sendEmail;

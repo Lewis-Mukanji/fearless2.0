@@ -374,39 +374,37 @@ button.donate-now:hover {
             <div class="donation-form">
                 <h2>Your Donation Has The Power To Transform Lives.</h2>
                 <p>"Each one must give as he has decided in his heart, not reluctantly or under compulsion, for God loves a cheerful giver."</p>
-                <cite>~2 Corinthians 9:7~</cite>>
-                <form action="#">
+                <cite>~2 Corinthians 9:7~</cite>
+                <form id="donationForm">
                     <div class="form-group">
-                        <input type="text" placeholder="Your Name">
-                        <input type="text" placeholder="Your Address">
+                        <input type="text" id="name" name="name" placeholder="Your Name" required>
+                        <input type="text" id="address" name="address" placeholder="Your Address" required>
                     </div>
                     <div class="form-group">
-                        <input type="tel" placeholder="Telephone">
-                        <input type="email" placeholder="Email">
-                    </div>
-                    <!-- Added Message Box -->
-                    <div class="form-group">
-                        <textarea placeholder="Message" rows="4"></textarea>
+                        <input type="tel" id="phone" name="phone" placeholder="Telephone" required>
+                        <input type="email" id="email" name="email" placeholder="Email" required>
                     </div>
                     <div class="form-group">
-                        <select>
+                        <textarea id="message" name="message" placeholder="Message" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <select id="donorType" name="donorType" required>
                             <option value="">Donor Type</option>
                             <option value="individual">Individual</option>
                             <option value="corporate">Group</option>
                         </select>
-                        <select id="paymentMethod">
+                        <select id="paymentMethod" name="paymentMethod" required>
                             <option value="">Donation Payment</option>
                             <option value="mpesa">Mpesa</option>
                             <option value="paypal">PayPal</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="donation-total"></label>
-                        <input type="range" id="donation-total" min="1" max="1000">
-                        <span>Total Donation</span>
+                        <label for="amount">Amount: KES <span id="amountDisplay">500</span></label>
+                        <input type="range" id="amount" name="amount" min="100" max="100000" value="500" step="100">
                     </div>
-                    <!-- Option 1: Using onclick attribute -->
-                   <button type="button" class="donate-now" onclick="handleDonation()">Donate Now</button>
+                    <p id="formStatus" style="margin: 1rem 0; display: none;"></p>
+                    <button type="submit" class="donate-now">Donate Now</button>
                 </form>
             </div>
         </div>
@@ -543,6 +541,70 @@ document.addEventListener('DOMContentLoaded', function() {
                 faqAnswer.style.display = faqItem.classList.contains('active') ? 'block' : 'none';
             });
         });
+    </script>
+
+<script>
+    // Update amount display when slider moves
+    const amountInput = document.getElementById('amount');
+    const amountDisplay = document.getElementById('amountDisplay');
+    amountInput.addEventListener('input', (e) => {
+        amountDisplay.textContent = e.target.value;
+    });
+    
+    // Handle form submission
+    const donationForm = document.getElementById('donationForm');
+    const formStatus = document.getElementById('formStatus');
+    
+    donationForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        const submitButton = donationForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.textContent = 'Processing...';
+        
+        try {
+            const formData = {
+                to: "mukanjilewis94@gmail.com",
+                subject: "New Donation Form Submission",
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                message: document.getElementById('message').value,
+                donorType: document.getElementById('donorType').value,
+                paymentMethod: document.getElementById('paymentMethod').value,
+                amount: document.getElementById('amount').value
+            };
+    
+            const response = await fetch('http://localhost:5000/api/send-donation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                formStatus.style.display = "block";
+                formStatus.style.color = "#4CAF50";
+                formStatus.textContent = "Thank you for your donation! We'll contact you with payment details.";
+                donationForm.reset();
+                amountDisplay.textContent = "500"; // Reset amount display
+            } else {
+                throw new Error(result.message || "Donation submission failed");
+            }
+        } catch (error) {
+            formStatus.style.display = "block";
+            formStatus.style.color = "#f44336";
+            formStatus.textContent = error.message || "Sorry, there was an error processing your donation. Please try again.";
+            console.error('Error:', error);
+        }
+        
+        submitButton.disabled = false;
+        submitButton.textContent = 'Donate Now';
+    });
     </script>
 </body>
 </html>
