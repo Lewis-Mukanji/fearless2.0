@@ -3,155 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fearless Movement - Our Merchandise</title>
+    <title>Merchandise Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <script defer src="script.js"></script>
     <style>
-        /* Basic Reset */
-        * {
+        /* Existing styles */
+        body {
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            background-color: #f8f8f8;
         }
-
-        /* Navbar Styling */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background-color: #fdfdfd;
-            border-bottom: 1px solid #ddd;
-            width: 100%;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .navbar-logo img {
-            height: 50px;
-        }
-
-.toggle-menu {
-    position: relative;
-}
-
-.menu-button {
-    background-color: #0066cc;
-    color: white;
-    padding: 10px 15px;
-    border: none;
+        /* Navbar styling */
+.navbar {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    font-family: 'Poppins', sans-serif;
-}
-
-.hamburger {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.hamburger span {
-    display: block;
-    width: 24px;
-    height: 2px;
-    background-color: white;
-    transition: all 0.3s;
-}
-
-.menu-button.active .hamburger span:first-child {
-    transform: rotate(45deg) translate(5px, 5px);
-}
-
-.menu-button.active .hamburger span:nth-child(2) {
-    opacity: 0;
-}
-
-.menu-button.active .hamburger span:last-child {
-    transform: rotate(-45deg) translate(5px, -5px);
-}
-
-.menu-dropdown {
+    padding: 15px 20px;
+    background: transparent; /* Slightly transparent */
     position: absolute;
-    top: 100%;
+    width: 100%;
+    top: 0;
     left: 0;
-    background-color: white;
-    min-width: 200px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    border-radius: 4px;
-    display: none;
-    margin-top: 8px;
+    z-index: 1000;
 }
 
-.menu-dropdown.show {
-    display: block;
+/* Logo */
+.logo {
+    color: #fff;
+    font-size: 22px;
+    font-weight: bold;
 }
 
-.menu-dropdown nav {
+/* Navigation links */
+.nav-links {
+    list-style: none;
     display: flex;
-    flex-direction: column;
-    padding: 8px 0;
+    gap: 20px;
 }
 
-.menu-dropdown a {
-    padding: 8px 16px;
+.nav-links li {
+    display: inline-block;
+}
+
+.nav-links a {
     text-decoration: none;
-    color: #333;
-    transition: background-color 0.3s;
+    color: white;
+    font-size: 18px;
+    padding: 8px 12px;
+    transition: 0.3s;
+    border-radius: 5px;
 }
 
-.menu-dropdown a:hover {
-    background-color: #f5f5f5;
+/* Hover & Active Effects */
+.nav-links a:hover,
+.nav-links a.active {
+    background-color: #ff6600;
+    color: white;
 }
 
+/* Mobile menu button */
+.hamburger {
+    display: none;
+    font-size: 28px;
+    color: white;
+    cursor: pointer;
+}
 
-        .navbar-links {
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        width: 200px;
+        border-radius: 5px;
+        padding: 10px 0;
+    }
+
+    .nav-links li {
+        text-align: center;
+        padding: 10px 0;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    /* Show menu when active */
+    .nav-links.active {
+        display: flex;
+    }
+}
+
+        .hero {
+            background: url('img/tbm.jpg') no-repeat center center/cover;
+            height: 300px;
             display: flex;
-            gap: 20px;
-        }
-
-        .navbar-links a {
-            text-decoration: none;
-            color: #333;
-            font-size: 1.1rem;
-            font-family: 'Poppins', sans-serif;
-            transition: color 0.3s;
-        }
-
-        .navbar-links a:hover {
-            color: #555;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .navbar-icons {
-            display: flex;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 15px;
-            font-size: 1.2rem;
-            color: #800080;
-        }
-
-        .navbar-icons .cart {
-            position: relative;
-        }
-
-        .navbar-icons .cart .badge {
-            position: absolute;
-            top: -5px;
-            right: -10px;
-            background-color: #800080;
+            text-align: center;
             color: #fff;
-            font-size: 0.7rem;
-            font-family: 'Poppins', sans-serif;
-            border-radius: 50%;
-            padding: 3px 6px;
         }
 
-        .navbar-icons .cart-text {
-            color: #800080;
-            font-size: 1rem;
-            font-family: 'Poppins', sans-serif;
+        .hero h1 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            color: #333;
+            margin: 30px 0 10px;
         }
         .promo-section {
   display: flex;
@@ -225,378 +198,555 @@
   color: #888;
   font-family: 'Poppins', sans-serif;
 }
-
-
-        /* Merchandise Container */
-        .merchandise-container {
-            padding: 20px;
-            width: 100%;
-            max-width: 100%;
-        }
-
-        .merchandise-container h1 {
-            font-size: 2.5rem;
-            font-family: 'Poppins', sans-serif;
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        /* Category Heading */
-        .product-category h2 {
-            font-size: 2rem;
-            font-family: 'Poppins', sans-serif;
-            margin: 20px 0;
-            color: #555;
-            text-align: center;
-        }
-
-        /* Product Grid */
-        .product-grid {
+        .products {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
-            margin-bottom: 40px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
         }
 
-        /* Product Item */
-        .product-item {
+        .product {
+            background: #fff;
+            padding: 15px;
             text-align: center;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.3s;
-            background-color: #fff;
-        }
-
-        .product-item:hover {
-            transform: scale(1.02);
-        }
-
-        .product-item img {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
             border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .product-item p {
-            font-size: 1.2rem;
+        .product img {
+            width: 100%;
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .product p {
+            font-size: 1rem;
+            margin: 10px 0;
             color: #333;
+        }
+
+        .product span {
+            font-weight: bold;
+            color: #000;
+        }
+        /* Hover effect for product cards */
+.product:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.product:hover img {
+    transform: scale(1.05); /* Slightly enlarge the image */
+}
+
+.product:hover p, 
+.product:hover span {
+    color: #007bff; /* Change text color on hover */
+}
+
+        /* New styles for cart functionality */
+        .cart-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ff6600;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff0000;
+            color: white;
+            border-radius: 50%;
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background: white;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+            z-index: 1001;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-cart {
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .cart-items {
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             margin-top: 10px;
         }
 
-        .product-item span {
-            font-size: 1.1rem;
-            color: #555;
-        }
-
-        /* Purchase Section Styling */
-        .purchase-section {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            margin: 40px 0;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-
-        .purchase-section select,
-        .purchase-section input,
-        .purchase-section .total-box,
-        .purchase-section button {
-            padding: 10px;
-            font-size: 1.1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .purchase-section select,
-        .purchase-section input {
-            width: 150px;
-        }
-
-        .purchase-section .total-box {
-            width: 100px;
-            text-align: center;
-            background-color: #f0f0f0;
-            color: #333;
-        }
-
-        .purchase-section button {
-            background-color: #ff6600;
-            color: #fff;
+        .quantity-selector button {
+            background: #eee;
             border: none;
+            padding: 5px 10px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            border-radius: 3px;
         }
 
-        .purchase-section button:hover {
-            background-color: #ff8c1a;
+        .purchase-btn {
+            background: #ff6600;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            width: 50%;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
         }
 
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #f0f0f0;
-            color: #333;
-            width: 100%;
+        .purchase-btn:hover {
+            background: #ff8533;
         }
 
-        .footer a {
-            color: #333;
-            text-decoration: none;
-            font-weight: bold;
-        }
+        .add-to-cart-btn {
+            background: #ff6600;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 8px;
+            width: 120px;
+            font-size: 0.9rem;
+            transition: background-color 0.2s ease;
+        }    
 
-        /* Social media icons styling for footer */
-        .footer-socials a {
-            color: #333;
-            font-size: 1.2rem;
-            margin: 0 10px;
-            text-decoration: none;
-        }
-
-        .footer-socials a:hover {
-            color: #ffae00;
+            .add-to-cart-btn:hover {
+            background: #ff8533;
         }
     </style>
 </head>
 <body>
+    <!-- Cart Icon -->
+    <div class="cart-icon" onclick="toggleCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count">0</span>
+    </div>
 
-<!-- Navbar -->
-<div class="navbar">
-    <div class="navbar-logo">
-        <a href="index.html">
-            <img src="img/fl.png" alt="Fearless Logo">
-        </a>
-    </div>
-    <div class="navbar-links">
-        <h1>Fearless Merchandise</h1>
-        <!-- <a href="#">All Designs</a>
-        <a href="#">T-shirts</a>
-        <a href="#">Caps</a> -->
-    </div>
-    <div class="navbar-icons">
-        <span class="cart-text">KSh 0.00</span>
-        <div class="cart">
-            <i class="fas fa-shopping-basket"></i>
-            <span class="badge">0</span>
+    <!-- Cart Modal -->
+    <div class="cart-modal">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <span class="close-cart" onclick="toggleCart()">&times;</span>
         </div>
-        <i class="fas fa-user"></i>
+        <div class="cart-items">
+            <!-- Cart items will be dynamically added here -->
+        </div>
+        <div class="cart-total">
+            Total: KSh <span id="cart-total-amount">0</span>
+        </div>
+        <button class="purchase-btn" onclick="checkout()">Purchase</button>
     </div>
-    <div class="toggle-menu">
-        <button class="menu-button" onclick="toggleMenu()">
-            Menu
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </button>
-        <div class="menu-dropdown" id="menuDropdown">
-            <nav>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">Fearless</div>
+            <ul class="nav-links">
                 <a href="index.html">Home</a>
       <a href="events.html">Events</a>
       <a href="outreach.html">Outreach</a>
       <a href="merchandise.html">Merchandise</a>
-      <a href="about.html" >About us</a>
+      <a href="about.html" class=>About us</a>
       <a href="donations.html">Donations</a>
       <a href="contact.html">Contact us</a>
-            </nav>
+            </ul>
+            <div class="hamburger">
+                ☰
+            </div>
+        </nav>
+        <div class="hero">
+            <h1>Fearless Essential Merchandise</h1>
+            <p>Check out our latest collection ⬇️</p>
         </div>
-    </div>
+    </header>
     
-</div>
-<div class="promo-section">
-    <div class="promo-content">
-      <h4>Annual Sale </h4>
-      <h1>Sale 10% Off Everything</h1>
-      <a href="#" class="shop-now-btn">Shop Now</a>
-    </div>
-    <div class="promo-image">
-      <img src="img/image (1).jpg" alt="Promotional Image">
-    </div>
-    <div class="promo-image">
-        <img src="img/image (2).jpg" alt="Promotional Image">
-      </div>
-      
-  </div>
-  
-  <div class="promo-features">
-    <div class="feature-item">
-      <img src="icon/fd.jpg" alt="Free Delivery">
-      <p>Free Delivery<br><span>For all orders over ksh. 5000</span></p>
-    </div>
-    <!-- <div class="feature-item">
-      <img src="icon/ret.jpg" alt="30 Days Return">
-      <p>30 Days Return<br><span>If goods have problems</span></p>
-    </div> -->
-    <div class="feature-item">
-      <img src="icon/pe.jpg" alt="Secure Payment">
-      <p>Secure Payment<br><span>100% secure payment</span></p>
-    </div>
-    <div class="feature-item">
-      <img src="icon/sup.jpg" alt="24/7 Support">
-      <p>24/7 Support<br><span>Dedicated support</span></p>
-    </div>
-  </div>
-  
-
-<!-- Merchandise Section -->
-<div class="merchandise-container">
-    <!-- <h1>Fearless Merchandise</h1> -->
-
-    <!-- T-Shirts Category -->
-    <div class="product-category">
-        <h2>T-Shirts</h2>
-        <div class="product-grid">
-            <div class="product-item">
-                <img src="img/T1.png" alt="Black Fearless T-shirt">
-                <p>Black Fearless T-shirt</p>
-                <span>KSh 799.00</span>
+    <main>
+        <div class="promo-features">
+            <div class="feature-item">
+              <img src="icon/fd.jpg" alt="Free Delivery">
+              <p>Free Delivery<br><span>For all orders over ksh. 5000</span></p>
             </div>
-            <div class="product-item">
-                <img src="img/T2.png" alt="Green Fearless T-shirt">
-                <p>Green Fearless T-shirt</p>
-                <span>KSh 799.00</span>
+            <!-- <div class="feature-item">
+              <img src="icon/ret.jpg" alt="30 Days Return">
+              <p>30 Days Return<br><span>If goods have problems</span></p>
+            </div> -->
+            <div class="feature-item">
+              <img src="icon/pe.jpg" alt="Secure Payment">
+              <p>Secure Payment<br><span>100% secure payment</span></p>
             </div>
-            <div class="product-item">
-                <img src="img/T3.png" alt="Yellow Fearless T-shirt">
-                <p>Yellow Fearless T-shirt</p>
-                <span>KSh 799.00</span>
-            </div>
-            <div class="product-item">
-                <img src="img/T4.png" alt="Yellow Fearless T-shirt">
-                <p>Yellow Fearless T-shirt</p>
-                <span>KSh 799.00</span>
+            <div class="feature-item">
+              <img src="icon/sup.jpg" alt="24/7 Support">
+              <p>24/7 Support<br><span>Dedicated support</span></p>
             </div>
         </div>
-    </div>
-
-    <!-- Hoodies Category -->
-    <div class="product-category">
-        <h2>Hoodies</h2>
-        <div class="product-grid">
-            <div class="product-item">
-                <img src="img/J1.png" alt="Black Fearless Hoodie">
-                <p>Black Fearless Hoodie</p>
-                <span>KSh 1,299.00</span>
+          
+        <!-- T-Shirts Section -->
+        <section>
+            <h2 class="section-title">T-Shirts</h2>
+            <div class="products">
+                <div class="product">
+                    <img src="img/T1.png" alt="Fearless Tee (Port)">
+                    <p>Fearless Tee (Port)</p>
+                    <span>KSh 799.00</span>
+                    <div class="quantity-selector">
+                        <button onclick="updateQuantity('tee-port', -1)">-</button>
+                        <span id="qty-tee-port">1</span>
+                        <button onclick="updateQuantity('tee-port', 1)">+</button>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Men\'s Essential Tee (Port)', 799, 'tee-port')">
+                        Add to Cart
+                    </button>
+                </div>
+                <div class="product">
+                    <img src="img/T2.png" alt="Fearless Tee (Deep Forest)">
+                    <p>Fearless Tee </p>
+                    <span>KSh 799.00</span>
+                    <div class="quantity-selector">
+                        <button onclick="updateQuantity('tee-forest', -1)">-</button>
+                        <span id="qty-tee-forest">1</span>
+                        <button onclick="updateQuantity('tee-forest', 1)">+</button>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Men\'s Essential Tee (Deep Forest)', 799, 'tee-forest')">
+                        Add to Cart
+                    </button>
+                </div>
+                <div class="product">
+                    <img src="img/T3.png" alt="Fearless Tee (Bone)">
+                    <p>Fearless Tee (Bone)</p>
+                    <span>KSh 799.00</span>
+                    <div class="quantity-selector">
+                        <button onclick="updateQuantity('tee-bone', -1)">-</button>
+                        <span id="qty-tee-bone">1</span>
+                        <button onclick="updateQuantity('tee-bone', 1)">+</button>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Men\'s Essential Tee (Bone)', 799, 'tee-bone')">
+                        Add to Cart
+                    </button>
+                </div>
+                <div class="product">
+                    <img src="img/T4.png" alt="Fearless Tee (Charcoal)">
+                    <p>Fearless Tee (Charcoal)</p>
+                    <span>KSh 799.00</span>
+                    <div class="quantity-selector">
+                        <button onclick="updateQuantity('tee-charcoal', -1)">-</button>
+                        <span id="qty-tee-charcoal">1</span>
+                        <button onclick="updateQuantity('tee-charcoal', 1)">+</button>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Men\'s Essential Tee (Charcoal)', 799, 'tee-charcoal')">
+                        Add to Cart
+                    </button>
+                </div>
             </div>
-            <div class="product-item">
-                <img src="img/j2.png" alt="White Fearless Hoodie">
-                <p>White Fearless Hoodie</p>
-                <span>KSh 1,299.00</span>
-            </div>
-            <div class="product-item">
-                <img src="img/j3.png" alt="Red Fearless Hoodie">
-                <p>Red Fearless Hoodie</p>
-                <span>KSh 1,299.00</span>
-            </div>
-            <div class="product-item">
-                <img src="img/j4.png" alt="Red Fearless Hoodie">
-                <p>Red Fearless Hoodie</p>
-                <span>KSh 1,299.00</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Caps Category -->
-    <div class="product-category">
-        <h2>Caps</h2>
-        <div class="product-grid">
-            <div class="product-item">
-                <img src="img/H1.png" alt="Black Fearless Cap">
-                <p>Black Fearless Cap</p>
-                <span>KSh 400.00</span>
-            </div>
-            <div class="product-item">
-                <img src="img/h2.png" alt="White Fearless Cap">
-                <p>White Fearless Cap</p>
-                <span>KSh 400.00</span>
-            </div>
-            <div class="product-item">
-                <img src="img/h3.png" alt="Green Fearless Cap">
-                <p>Green Fearless Cap</p>
-                <span>KSh 400.00</span>
-            </div>
-            <div class="product-item">
-                <img src="img/h4.png" alt="Green Fearless Cap">
-                <p>Green Fearless Cap</p>
-                <span>KSh 400.00</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Purchase Section -->
-    <div class="purchase-section">
-        <select id="item-select">
-            <option value="tshirt" data-price="799">T-Shirt (KSh 799)</option>
-            <option value="jumper" data-price="1299">Jumper (KSh 1299)</option>
-            <option value="cap" data-price="400">Cap (KSh 400)</option>
-        </select>
-
-        <input type="number" id="quantity" placeholder="Quantity" min="1" value="1" onchange="calculateTotal()">
-
-        <div class="total-box" id="total-amount">KSh 799</div>
-
-        <button onclick="purchase()">Purchase</button>
-    </div>
-</div>
-
-<!-- Footer -->
-<footer class="footer">
-    <div class="footer-socials">
-        <a href="https://twitter.com/" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-        <a href="https://instagram.com/the.fearlessmovement" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="https://facebook.com/TheFearlessMovement" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-        <a href="https://tiktok.com/" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-    </div>
-    &copy; 2024 TheFearlessMovement. All rights reserved
-</footer>
-
-<script>
-    function toggleMenu() {
-        const menuButton = document.querySelector('.menu-button');
-        const menuDropdown = document.getElementById('menuDropdown');
+        </section>
         
-        menuButton.classList.toggle('active');
-        menuDropdown.classList.toggle('show');
-    }
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', function(event) {
-        const menu = document.querySelector('.toggle-menu');
-        const menuButton = document.querySelector('.menu-button');
-        const menuDropdown = document.getElementById('menuDropdown');
-        
-        if (!menu.contains(event.target)) {
-            menuButton.classList.remove('active');
-            menuDropdown.classList.remove('show');
-        }
+        <!-- Hoodies Section -->
+        <section>
+            <h2 class="section-title">Hoodies</h2>
+            <div class="products">
+                <div class="product">
+                    <img src="img/J1.png" alt="Fearless Hoodie (Black)">
+                    <p>Fearless Hoodie (Black)</p>
+                    <span>KSh 1,500.00</span>
+                    <div class="quantity-selector">
+                        <button onclick="updateQuantity('hoodie-black', -1)">-</button>
+                        <span id="qty-hoodie-black">1</span>
+                        <button onclick="updateQuantity('hoodie-black', 1)">+</button>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Men\'s Essential Hoodie (Black)', 1500, 'hoodie-black')">
+                        Add to Cart
+                    </button>
+                </div>
+                <div class="product">
+                    <img src="img/j2.png" alt="Fearless Hoodie (Gray)">
+                    <p>Fearless Hoodie (Gray)</p>
+                    <span>KSh 1,500.00</span>
+                    <div class="quantity-selector">
+                        <button onclick="updateQuantity('hoodie-gray', -1)">-</button>
+                        <span id="qty-hoodie-gray">1</span>
+                        <button onclick="updateQuantity('hoodie-gray', 1)">+</button>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Men\'s Essential Hoodie (Gray)', 1500, 'hoodie-gray')">
+                        Add to Cart
+                    </button>
+                </div>
+                <div class="product">
+                    <img src="img/j3.png" alt="Fearless Hoodie (Navy)">
+                    <p>Fearless Hoodie (Navy)</p>
+                    <span>KSh 1,500.00</span>
+                    <div class="quantity-selector">
+                        <button onclick="updateQuantity('hoodie-navy', -1)">-</button>
+                        <span id="qty-hoodie-navy">1</span>
+                        <button onclick="updateQuantity('hoodie-navy', 1)">+</button>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Men\'s Essential Hoodie (Navy)', 1500, 'hoodie-navy')">
+                        Add to Cart
+                    </button>
+                </div>
+                <div class="product">
+                    <img src="img/j4.png" alt="Fearless Hoodie (Olive)">
+                    <p>Fearless Hoodie (Olive)</p>
+                    <span>KSh 1,500.00</span>
+                    <div class="quantity-selector">
+                        <button onclick="updateQuantity('hoodie-olive', -1)">-</button>
+                        <span id="qty-hoodie-olive">1</span>
+                        <button onclick="updateQuantity('hoodie-olive', 1)">+</button>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Men\'s Essential Hoodie (Olive)', 1500, 'hoodie-olive')">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Caps Section -->
+        <section>
+            <h2 class="section-title">Caps</h2>
+            <div class="products">
+                <div class="product">
+                    <img src="img/H1.png" alt="Fearless Cap (Black)">
+                    <p>Fearless Cap (Black)</p>
+                    <span>KSh 400.00</span>
+                    <div class="quantity-selector">
+                        <button onclick="updateQuantity('cap-black', -1)">-</button>
+                        <span id="qty-cap-black">1</span>
+                        <button onclick="updateQuantity('cap-black', 1)">+</button>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Men\'s Essential Cap (Black)', 400, 'cap-black')">
+                        Add to Cart
+                    </button>
+                </div>
+                <div class="product">
+                    <img src="img/h2.png" alt="Fearless Cap (Gray)">
+                    <p>Fearless Cap (Gray)</p>
+                    <span>KSh 400.00</span>
+                    <div class="quantity-selector">
+                        <button onclick="updateQuantity('cap-gray', -1)">-</button>
+                        <span id="qty-cap-gray">1</span>
+                        <button onclick="updateQuantity('cap-gray', 1)">+</button>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Men\'s Essential Cap (Gray)', 400, 'cap-gray')">
+                        Add to Cart
+                    </button>
+                </div>
+                <div class="product">
+                    <img src="img/h3.png" alt="Fearless Cap (Navy)">
+                    <p>Fearless Cap (Navy)</p>
+                    <span>KSh 400.00</span>
+                    <div class="quantity-selector">
+                        <button onclick="updateQuantity('cap-navy', -1)">-</button>
+                        <span id="qty-cap-navy">1</span>
+                        <button onclick="updateQuantity('cap-navy', 1)">+</button>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Men\'s Essential Cap (Navy)', 400, 'cap-navy')">
+                        Add to Cart
+                    </button>
+                </div>
+                <div class="product">
+                    <img src="img/h4.png" alt="Fearless Cap (Olive)">
+                    <p>Fearless Cap (Olive)</p>
+                    <span>KSh 400.00</span>
+                    <div class="quantity-selector">
+                        <button onclick="updateQuantity('cap-olive', -1)">-</button>
+                        <span id="qty-cap-olive">1</span>
+                        <button onclick="updateQuantity('cap-olive', 1)">+</button>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Men\'s Essential Cap (Olive)', 400, 'cap-olive')">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+    const hamburger = document.querySelector(".hamburger");
+    const navLinks = document.querySelector(".nav-links");
+
+    hamburger.addEventListener("click", () => {
+        navLinks.classList.toggle("active");
     });
+});
+
+    </script>    
+
+    <script>
+        let cart = [];
+        let cartTotal = 0;
+
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.querySelector('.cart-count').textContent = count;
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.querySelector('.cart-items');
+            cartItems.innerHTML = '';
+            cartTotal = 0;
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                cartTotal += itemTotal;
+                
+                cartItems.innerHTML += `
+                    <div class="cart-item">
+                        <div>
+                            <p>${item.name}</p>
+                            <p>KSh ${item.price} x ${item.quantity}</p>
+                        </div>
+                        <button onclick="removeFromCart('${item.id}')">&times;</button>
+                    </div>
+                `;
+            });
+
+            document.getElementById('cart-total-amount').textContent = cartTotal;
+        }
+
+        function toggleCart() {
+            const cartModal = document.querySelector('.cart-modal');
+            cartModal.style.display = cartModal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function updateQuantity(productId, change) {
+            const qtyElement = document.getElementById(`qty-${productId}`);
+            let quantity = parseInt(qtyElement.textContent) + change;
+            if (quantity < 1) quantity = 1;
+            if (quantity > 10) quantity = 10;
+            qtyElement.textContent = quantity;
+        }
+
+        function addToCart(name, price, id) {
+            const quantity = parseInt(document.getElementById(`qty-${id}`).textContent);
+            const existingItem = cart.find(item => item.id === id);
+
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ id, name, price, quantity });
+            }
+
+            updateCartCount();
+            updateCartDisplay();
+            
+            // Show feedback
+            alert(`Added ${quantity} ${name} to cart`);
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartCount();
+            updateCartDisplay();
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+
+            const message = `Order Summary:\n\n${cart.map(item => 
+                `${item.name} x${item.quantity} - KSh ${item.price * item.quantity}`
+            ).join('\n')}\n\nTotal: KSh ${cartTotal}`;
+
+            alert(message);
+            // Here you would typically integrate with a payment system
+            cart = [];
+            updateCartCount();
+            updateCartDisplay();
+            toggleCart();
+        }
+
+        async function checkout() {
+        if (cart.length === 0) {
+            alert('Your cart is empty!');
+            return;
+        }
+
+        // Show loading state
+        const purchaseBtn = document.querySelector('.purchase-btn');
+        purchaseBtn.disabled = true;
+        purchaseBtn.textContent = 'Processing...';
+
+        try {
+            const response = await fetch('http://localhost:3000/api/send-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    items: cart,
+                    total: cartTotal
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert('Order placed successfully! We will contact you soon with payment details.');
+                cart = [];
+                updateCartCount();
+                updateCartDisplay();
+                toggleCart();
+            } else {
+                alert('There was an error processing your order. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('There was an error processing your order. Please try again.');
+        } finally {
+            // Reset button state
+            purchaseBtn.disabled = false;
+            purchaseBtn.textContent = 'Purchase';
+        }
+    }
     </script>
-<script>
-    function calculateTotal() {
-        const itemSelect = document.getElementById("item-select");
-        const quantity = parseInt(document.getElementById("quantity").value);
-        const price = parseInt(itemSelect.options[itemSelect.selectedIndex].getAttribute("data-price"));
-        const total = price * quantity;
-        document.getElementById("total-amount").innerText = `KSh ${total}`;
-    }
-
-    function purchase() {
-        alert("Purchase successful!");
-    }
-
-    document.getElementById("item-select").addEventListener("change", calculateTotal);
-    document.getElementById("quantity").addEventListener("input", calculateTotal);
-</script>
-
 </body>
 </html>

@@ -30,12 +30,163 @@ db.connect((err) => {
 app.use(cors());
 app.use(bodyParser.json());
 
-// Route to send general emails
+// Create donations table
+db.query(`CREATE TABLE IF NOT EXISTS donations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    address TEXT NOT NULL,
+    message TEXT,
+    donor_type VARCHAR(50) NOT NULL,
+    payment_method VARCHAR(50) NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`);
+
+// Create orders table
+db.query(`CREATE TABLE IF NOT EXISTS orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    items JSON NOT NULL,
+    total DECIMAL(10,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`);
+
+// Route to handle merchandise orders
+app.post('/api/send-order', async (req, res) => {
+    try {
+        const { items, total } = req.body;
+
+        if (!items || !total) {
+            return res.status(400).json({
+                success: false,
+                message: 'Missing required fields'
+            });
+        }
+
+        // Create email content
+        const templateData = {
+            items,
+            total,
+            orderDate: new Date().toLocaleString()
+        };
+
+        // Send email notification
+        await sendEmail(
+            'thefearlessmovement1@gmail.com',
+            'New Merchandise Order',
+            templateData,
+            'order'
+        );
+
+        // Save to database
+        const sql = 'INSERT INTO orders (items, total) VALUES (?, ?)';
+        db.query(sql, [JSON.stringify(items), total], (err, result) => {
+            if (err) {
+                console.error('Error saving order to database:', err);
+                return res.status(500).json({
+                    success: false,
+                    message: 'Failed to save order'
+                });
+            }
+
+            res.status(200).json({
+                success: true,
+                message: 'Order processed successfully'
+            });
+        });
+    } catch (error) {
+        console.error('Error processing order:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to process order',
+            error: error.message
+        });
+    }
+});
+
+// Route to handle donation submissions
+app.post('/api/send-donation', async (req, res) => {
+    try {
+        const { 
+            name, 
+            email, 
+            phone, 
+            address,
+            message,
+            donorType,
+            paymentMethod,
+            amount,
+            to,
+            subject
+        } = req.body;
+
+        // Validate required fields
+        if (!name || !email || !phone || !address || !donorType || !paymentMethod || !amount) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Missing required fields' 
+            });
+        }
+
+        // Prepare template data for email
+        const templateData = {
+            name,
+            email,
+            phone,
+            address,
+            message: message || 'No message provided',
+            donorType,
+            paymentMethod,
+            amount
+        };
+
+        // Send email notification
+        await sendEmail(to, subject, templateData, 'donation');
+
+        // Save to database
+        const sql = `INSERT INTO donations 
+            (name, email, phone, address, message, donor_type, payment_method, amount) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        
+        db.query(sql, [
+            name, 
+            email, 
+            phone, 
+            address, 
+            message || null, 
+            donorType, 
+            paymentMethod, 
+            amount
+        ], (err, result) => {
+            if (err) {
+                console.error('Error saving donation to database:', err);
+                return res.status(500).json({ 
+                    success: false, 
+                    message: 'Failed to save donation' 
+                });
+            }
+            
+            res.status(200).json({ 
+                success: true, 
+                message: 'Donation processed successfully' 
+            });
+        });
+    } catch (error) {
+        console.error('Error processing donation:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to process donation', 
+            error: error.message 
+        });
+    }
+});
+
+// Existing routes
 app.post('/api/send-email', async (req, res) => {
     try {
         const { to, subject, name, email, phone, message } = req.body;
         
-        // Validate required fields
         if (!to || !subject || !name || !email || !message) {
             return res.status(400).json({ 
                 success: false, 
@@ -43,7 +194,6 @@ app.post('/api/send-email', async (req, res) => {
             });
         }
 
-        // Prepare template data
         const templateData = {
             name,
             email,
@@ -51,23 +201,13 @@ app.post('/api/send-email', async (req, res) => {
             message
         };
         
-        await sendEmail(to, subject, templateData);
+        await sendEmail(to, subject, templateData, 'contact');
         res.status(200).json({ success: true, message: 'Email sent successfully' });
     } catch (error) {
         console.error('Error sending email:', error);
         res.status(500).json({ success: false, message: 'Failed to send email', error: error.message });
     }
 });
-
-// Handle form submissions, send email, and save to MySQL
-db.query(`CREATE TABLE IF NOT EXISTS emails (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    phone VARCHAR(20),
-    message TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);`);
 
 app.post('/api/submit-form', async (req, res) => {
     try {
@@ -77,7 +217,6 @@ app.post('/api/submit-form', async (req, res) => {
             return res.status(400).json({ success: false, message: 'All fields are required' });
         }
 
-        // Prepare template data
         const templateData = {
             name,
             email,
@@ -85,14 +224,13 @@ app.post('/api/submit-form', async (req, res) => {
             message
         };
 
-        // Send email
         await sendEmail(
-            process.env.RECEIVER_EMAIL || 'mukanjilewis94@gmail.com',
+            process.env.RECEIVER_EMAIL || 'thefearlessmovement1@gmail.com',
             `New Contact Form Submission from ${name}`,
-            templateData
+            templateData,
+            'contact'
         );
 
-        // Insert data into MySQL database
         const sql = 'INSERT INTO emails (name, email, phone, message) VALUES (?, ?, ?, ?)';
         db.query(sql, [name, email, phone, message], (err, result) => {
             if (err) {
@@ -108,12 +246,10 @@ app.post('/api/submit-form', async (req, res) => {
     }
 });
 
-// Default route
 app.get('/', (req, res) => {
     res.send('Get ready for the fearless!!');
 });
 
-// Start server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

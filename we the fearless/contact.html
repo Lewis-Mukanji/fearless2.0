@@ -361,10 +361,10 @@
         <h3>Get In Touch!!</h3>
         <p>Fill out the form and we'll get back to you soon.</p>
         <form id="contactForm">
-            <input type="text" name="name" placeholder="Your Name" required>
-            <input type="email" name="email" placeholder="Your Email" required>
-            <input type="text" name="phone" placeholder="Your Phone" required>
-            <textarea name="message" placeholder="Your Message" required></textarea>
+            <input type="text" id="name" name="name" placeholder="Your Name" required>
+            <input type="email" id="email" name="email" placeholder="Your Email" required>
+            <input type="text" id="phone" name="phone" placeholder="Your Phone" required>
+            <textarea id="message" name="message" placeholder="Your Message" required></textarea>
             <button type="submit">Submit</button>
         </form>
         <p id="responseMessage"></p>
@@ -428,15 +428,17 @@
         navLinks.classList.toggle('active');
     }
 
-    document.getElementById("contactForm").addEventListener("submit", function(event) {
+    document.getElementById("contactForm").addEventListener("submit", async function(event) {
         event.preventDefault();
         
-        // Get form values
-        const formData = {
-            name: this.elements.name.value,
-            email: this.elements.email.value,
-            phone: this.elements.phone.value,
-            message: this.elements.message.value
+       // Get form values
+       const formData = {
+            to: "thefearlessmovement1@gmail.com",
+            subject: "New Contact Form Submission",
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            message: document.getElementById('message').value
         };
 
         // Show loading state
@@ -449,35 +451,35 @@
         const responseMessage = document.getElementById("responseMessage");
         responseMessage.textContent = '';
         
-        fetch("http://localhost:5000/api/submit-form", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(response => response.json())
-        .then(data => {
+        try {
+            const response = await fetch("http://localhost:5000/api/submit-form", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            const data = await response.json();
+            
             if (data.success) {
                 responseMessage.style.color = '#4CAF50';
                 responseMessage.textContent = "Thank you! Your message has been sent successfully.";
                 this.reset(); // Clear form
             } else {
-                responseMessage.style.color = '#f44336';
-                responseMessage.textContent = data.message || "Error sending message. Please try again.";
+                throw new Error(data.message || "Error sending message");
             }
-        })
-        .catch(error => {
+        } catch (error) {
             responseMessage.style.color = '#f44336';
-            responseMessage.textContent = "Error sending message. Please try again later.";
+            responseMessage.textContent = error.message || "Error sending message. Please try again later.";
             console.error('Error:', error);
-        })
-        .finally(() => {
+        } finally {
             // Restore button state
             submitButton.disabled = false;
             submitButton.textContent = originalButtonText;
-        });
+        }
     });
+</script>
 </script>
 
 </body>
