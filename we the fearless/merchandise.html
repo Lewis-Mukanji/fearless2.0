@@ -55,6 +55,36 @@
     transition: 0.3s;
     border-radius: 5px;
 }
+.snackbar {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1002;
+            left: 50%;
+            bottom: 30px;
+            font-size: 14px;
+            transition: visibility 0.3s, opacity 0.3s;
+            opacity: 0;
+        }
+
+        .snackbar.success {
+            background-color: #4114e4;
+        }
+
+        .snackbar.error {
+            background-color: #f44336;
+        }
+
+        .snackbar.show {
+            visibility: visible;
+            opacity: 1;
+        }
 
 /* Hover & Active Effects */
 .nav-links a:hover,
@@ -362,9 +392,11 @@
             .add-to-cart-btn:hover {
             background: #ff8533;
         }
+        
     </style>
 </head>
 <body>
+    <div class="snackbar" id="snackbar"></div>
     <!-- Cart Icon -->
     <div class="cart-icon" onclick="toggleCart()">
         <i class="fas fa-shopping-cart"></i>
@@ -618,105 +650,102 @@
 
     </script>    
 
-    <script>
-        let cart = [];
-        let cartTotal = 0;
+<script>
+    // Snackbar function
+    function showSnackbar(message, type = 'success') {
+        const snackbar = document.getElementById('snackbar');
+        snackbar.textContent = message;
+        snackbar.className = `snackbar ${type} show`;
 
-        function updateCartCount() {
-            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-            document.querySelector('.cart-count').textContent = count;
-        }
+        // Hide after 3 seconds
+        setTimeout(() => {
+            snackbar.className = 'snackbar';
+        }, 3000);
+    }
 
-        function updateCartDisplay() {
-            const cartItems = document.querySelector('.cart-items');
-            cartItems.innerHTML = '';
-            cartTotal = 0;
+    let cart = [];
+    let cartTotal = 0;
 
-            cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                cartTotal += itemTotal;
-                
-                cartItems.innerHTML += `
-                    <div class="cart-item">
-                        <div>
-                            <p>${item.name}</p>
-                            <p>KSh ${item.price} x ${item.quantity}</p>
-                        </div>
-                        <button onclick="removeFromCart('${item.id}')">&times;</button>
-                    </div>
-                `;
-            });
+    function updateCartCount() {
+        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+        document.querySelector('.cart-count').textContent = count;
+    }
 
-            document.getElementById('cart-total-amount').textContent = cartTotal;
-        }
+    function updateCartDisplay() {
+        const cartItems = document.querySelector('.cart-items');
+        cartItems.innerHTML = '';
+        cartTotal = 0;
 
-        function toggleCart() {
-            const cartModal = document.querySelector('.cart-modal');
-            cartModal.style.display = cartModal.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function updateQuantity(productId, change) {
-            const qtyElement = document.getElementById(`qty-${productId}`);
-            let quantity = parseInt(qtyElement.textContent) + change;
-            if (quantity < 1) quantity = 1;
-            if (quantity > 10) quantity = 10;
-            qtyElement.textContent = quantity;
-        }
-
-        function addToCart(name, price, id) {
-            const quantity = parseInt(document.getElementById(`qty-${id}`).textContent);
-            const existingItem = cart.find(item => item.id === id);
-
-            if (existingItem) {
-                existingItem.quantity += quantity;
-            } else {
-                cart.push({ id, name, price, quantity });
-            }
-
-            updateCartCount();
-            updateCartDisplay();
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            cartTotal += itemTotal;
             
-            // Show feedback
-            alert(`Added ${quantity} ${name} to cart`);
+            cartItems.innerHTML += `
+                <div class="cart-item">
+                    <div>
+                        <p>${item.name}</p>
+                        <p>KSh ${item.price} x ${item.quantity}</p>
+                    </div>
+                    <button onclick="removeFromCart('${item.id}')">&times;</button>
+                </div>
+            `;
+        });
+
+        document.getElementById('cart-total-amount').textContent = cartTotal;
+    }
+
+    function toggleCart() {
+        const cartModal = document.querySelector('.cart-modal');
+        cartModal.style.display = cartModal.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function updateQuantity(productId, change) {
+        const qtyElement = document.getElementById(`qty-${productId}`);
+        let quantity = parseInt(qtyElement.textContent) + change;
+        if (quantity < 1) quantity = 1;
+        if (quantity > 10) quantity = 10;
+        qtyElement.textContent = quantity;
+    }
+
+    function addToCart(name, price, id) {
+        const quantity = parseInt(document.getElementById(`qty-${id}`).textContent);
+        const existingItem = cart.find(item => item.id === id);
+
+        if (existingItem) {
+            existingItem.quantity += quantity;
+        } else {
+            cart.push({ id, name, price, quantity });
         }
 
-        function removeFromCart(productId) {
+        updateCartCount();
+        updateCartDisplay();
+        
+        showSnackbar(`Added ${quantity} ${name} to cart`, 'success');
+    }
+
+    function removeFromCart(productId) {
+        const removedItem = cart.find(item => item.id === productId);
+        if (removedItem) {
             cart = cart.filter(item => item.id !== productId);
             updateCartCount();
             updateCartDisplay();
+            showSnackbar(`Removed ${removedItem.name} from cart`, 'success');
         }
+    }
 
-        function checkout() {
-            if (cart.length === 0) {
-                alert('Your cart is empty!');
-                return;
-            }
-
-            const message = `Order Summary:\n\n${cart.map(item => 
-                `${item.name} x${item.quantity} - KSh ${item.price * item.quantity}`
-            ).join('\n')}\n\nTotal: KSh ${cartTotal}`;
-
-            alert(message);
-            // Here you would typically integrate with a payment system
-            cart = [];
-            updateCartCount();
-            updateCartDisplay();
-            toggleCart();
-        }
-
-        async function checkout() {
+    async function checkout() {
         if (cart.length === 0) {
-            alert('Your cart is empty!');
+            showSnackbar('Your cart is empty!', 'error');
             return;
         }
 
         // Show loading state
         const purchaseBtn = document.querySelector('.purchase-btn');
         purchaseBtn.disabled = true;
-        purchaseBtn.textContent = 'Processing...';
+        purchaseBtn.innerHTML = 'Processing... <span class="loading-spinner"></span>';
 
         try {
-            const response = await fetch('http://localhost:3000/api/send-order', {
+            const response = await fetch('http://localhost:5000/api/send-order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -727,26 +756,40 @@
                 })
             });
 
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const data = await response.json();
 
             if (data.success) {
-                alert('Order placed successfully! We will contact you soon with payment details.');
+                showSnackbar('Order placed successfully! We will contact you soon with payment details.', 'success');
                 cart = [];
                 updateCartCount();
                 updateCartDisplay();
                 toggleCart();
             } else {
-                alert('There was an error processing your order. Please try again.');
+                throw new Error(data.message || 'Order processing failed');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('There was an error processing your order. Please try again.');
+            showSnackbar(error.message || 'There was an error processing your order. Please try again.', 'error');
         } finally {
             // Reset button state
             purchaseBtn.disabled = false;
             purchaseBtn.textContent = 'Purchase';
         }
     }
-    </script>
+
+    // Mobile menu handler
+    document.addEventListener("DOMContentLoaded", () => {
+        const hamburger = document.querySelector(".hamburger");
+        const navLinks = document.querySelector(".nav-links");
+
+        hamburger.addEventListener("click", () => {
+            navLinks.classList.toggle("active");
+        });
+    });
+</script>
 </body>
 </html>
