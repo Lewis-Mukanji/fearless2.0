@@ -112,8 +112,6 @@ body {
         height: 100px;
     }
 }
-
-
 /* Hero Section */
 .hero-section {
     background: url('img/restaurant.jpg') no-repeat center center/cover;
@@ -329,83 +327,107 @@ body {
     font-weight: bold; /* Make citation bold */
 }
 
-/* Leader Highlight Section */
+/* Leadership Section */
+.leadership-section {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #0c0e14;
+}
+
 .leader-highlight {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  padding: 40px;
-  background-color: #0c0e14;
-  color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 40px;
 }
 
 .leader-image img {
-  width: 250px;
-  height: auto;
-  border-radius: 8px;
+    width: 300px; /* Size of the main leader image */
+    height: 300px; /* Ensure height matches width for a perfect circle */
+    border-radius: 50%; /* Makes the image circular */
+    /* border: 4px solid #ffae00;  */
+    object-fit: cover; /* Ensures the image fills the circle without distortion */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+}
+
+.leader-image img:hover {
+    transform: scale(1.1); /* Slightly enlarge on hover */
+    box-shadow: 0 0 20px rgba(255, 174, 0, 0.8); /* Add a glow effect */
 }
 
 .leader-description {
-  flex: 1;
-  font-family: Arial, sans-serif;
-  text-align: left;
+    text-align: center;
+    max-width: 600px;
 }
 
 .leader-description blockquote {
-  font-size: 18px;
-  font-style: italic;
-  line-height: 1.6;
-  margin-bottom: 20px;
+    font-size: 18px;
+    font-style: italic;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #ffffff;
 }
 
 .leader-description footer {
-  font-size: 16px;
-  font-weight: bold;
-  color: #ddd;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffae00;
 }
 
 #view-leaders-btn {
-  background-color: #ffae00;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
+    background-color: #ffae00;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
 }
 
 #view-leaders-btn:hover {
-  background-color:#ffae00;
+    background-color: #e69500;
 }
 
 /* Other Leaders Section */
 .team-members {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two leaders per row */
+    gap: 40px;
+    margin-top: 20px;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .team-member {
-  width: 200px;
-  text-align: center;
+    text-align: center;
 }
 
 .team-member img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
+    width: 250px; /* Size of other leader images */
+    height: 250px; /* Ensure height matches width for a perfect circle */
+    border-radius: 50%; /* Makes the image circular */
+    /* border: 4px solid #ffae00; */
+    object-fit: cover; /* Ensures the image fills the circle without distortion */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+}
+
+.team-member img:hover {
+    transform: scale(1.1); /* Slightly enlarge on hover */
+    box-shadow: 0 0 20px rgba(255, 174, 0, 0.8); /* Add a glow effect */
 }
 
 .team-member h3 {
-  font-size: 16px;
-  margin-top: 10px;
-  color: white;
+    font-size: 16px;
+    margin-top: 10px;
+    color: #ffffff;
 }
 
 .hidden {
-  display: none;
+    display: none;
 }
 /* Contact Form Section */
 .contact-form-section {
@@ -589,7 +611,6 @@ form button:hover {
   <!-- Hamburger Menu Icon -->
   <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
 </div>
-
     <!-- Hero Section -->
     <section class="hero-section">
         <h1>About The Fearlessmovement</h1>
@@ -606,7 +627,7 @@ form button:hover {
       <!-- Slide 2 -->
       <div class="slide" style="background-image: url('img/ev1.jpg');">
           <div class="center-text"></div>
-          <div class="text-overlay"></div>
+          <div class="text-overlay">Join us and be equipped</div>
       </div>
       
       <!-- Slide 3 -->
@@ -614,9 +635,9 @@ form button:hover {
           <div class="center-text"></div>
           <div class="text-overlay"></div>
       </div>
-      <div class="slide active" style="background-image: url('img/ev3.jpg');">
+      <div class="slide" style="background-image: url('img/ev3.jpg');">
         <div class="center-text"></div>
-        <div class="text-overlay">Hello</div>
+        <div class="text-overlay"></div>
     </div>
   </div>
 
@@ -635,7 +656,7 @@ form button:hover {
                      Matthew 5:16, Isaiah 60:1-2, and Romans 1:16-17—"For I am not ashamed of the gospel, because it is the power of God that
                       brings salvation to everyone who believes..."—the movement calls this generation to rise boldly, shine brightly, 
                       and be unshakable witnesses of God’s love and power in a world that desperately needs His light.</p>
-                <p class="signature">Pastor Joe</p>
+                <p class="signature">~Pastor Joe~</p>
             </div>
             <div class="image-box">
                 <img src="img/Fe1.jpg" alt="Chef in action">
@@ -646,7 +667,7 @@ form button:hover {
         <div class="centered-container">
         <div class="content-row">
             <div class="image-box">
-                <img src="img/tr.jpg" alt="Delicious Dish">
+                <img src="img/tr.jpg" alt="">
             </div>
             <div class="text-box">
                 <h2></h2>
@@ -677,49 +698,41 @@ form button:hover {
             </blockquote>
         </div>
     </section>
-    <!--Leadership section-->
-  <section class="leadership-section">
-    <div class="leader-highlight">
+   <!-- Leadership Section -->
+<section class="leadership-section">
+  <div class="leader-highlight">
       <div class="leader-image">
-        <img src="img/pj.jpg" alt="Leader Name">
+          <img src="img/pj.jpg" alt="Leader Name">
       </div>
       <div class="leader-description">
-        <blockquote>
-          <p>This is our leader, <br>brief description here......</p>
-          <footer>- Leader Name</footer>
-        </blockquote>
-        <button id="view-leaders-btn">Other Leaders</button>
+          <blockquote>
+              <p>This is our leader, <br>brief description here......</p>
+              <footer>- Leader Name</footer>
+          </blockquote>
+          <button id="view-leaders-btn">View Other Leaders</button>
       </div>
-    </div>
-  
-    <!-- Hidden Section for Other Leaders -->
-    <div id="other-leaders" class="team-members hidden">
+  </div>
+
+  <!-- Hidden Section for Other Leaders -->
+  <div id="other-leaders" class="team-members hidden">
       <div class="team-member">
-        <img src="img/d4.jpg" alt="Marcus Courage">
-        <h3>Marcus Courage</h3>
-      </div>
-      <div class="team-member">
-        <img src="img/pj.jpg" alt="Kimera Chetty">
-        <h3>Kimera Chetty</h3>
+          <img src="img/d4.jpg" alt="Mr and Mrs Chola">
+          <h3>Mr and Mrs Chola</h3>
       </div>
       <div class="team-member">
-        <img src="img/pj.jpg" alt="Magdalene Kariuki">
-        <h3>Magdalene Kariuki</h3>
+          <img src="img/pj.jpeg" alt="Mr and Mrs Okumu">
+          <h3>Mr and Mrs Okumu</h3>
       </div>
       <div class="team-member">
-        <img src="img/pj.jpg" alt="Marcus Courage">
-        <h3>Marcus Courage</h3>
+          <img src="img/pj.jpg" alt="Phillip Muasa">
+          <h3>Phillip Muasa</h3>
       </div>
       <div class="team-member">
-        <img src="img/pj.jpg" alt="Kimera Chetty">
-        <h3>Kimera Chetty</h3>
+          <img src="img/pj.jpg" alt="Marcus Courage">
+          <h3>Marcus Courage</h3>
       </div>
-      <div class="team-member">
-        <img src="img/pj.jpg" alt="Magdalene Kariuki">
-        <h3>Magdalene Kariuki</h3>
-      </div>
-    </div>
-  </section>
+  </div>
+</section>
   <section class="contact-form-section">
     <div class="form-container">
       <div class="form-text">
@@ -816,29 +829,24 @@ form button:hover {
 </script>
 
   <script>
-    // Select the "View Other Leaders" button
-    const viewLeadersButton = document.getElementById("view-leaders-btn");
-    
-    // Select the "Other Leaders" section
-    const otherLeadersSection = document.getElementById("other-leaders");
-    
-    // Add a click event listener to the button
-    viewLeadersButton.addEventListener("click", () => {
-      // Check if the "Other Leaders" section is currently hidden
-      if (otherLeadersSection.classList.contains("hidden")) {
-        // Remove the hidden class to make the section visible
-        otherLeadersSection.classList.remove("hidden");
-    
-        // Update the button text to "Hide Other Leaders"
-        viewLeadersButton.textContent = " Other Leaders";
-      } else {
-        // Add the hidden class to hide the section again
-        otherLeadersSection.classList.add("hidden");
-    
-        // Update the button text back to "View Other Leaders"
-        viewLeadersButton.textContent = " Other Leaders";
-      }
-    });
+  // Select the "View Other Leaders" button
+const viewLeadersButton = document.getElementById("view-leaders-btn");
+
+// Select the "Other Leaders" section
+const otherLeadersSection = document.getElementById("other-leaders");
+
+// Add a click event listener to the button
+viewLeadersButton.addEventListener("click", () => {
+    // Toggle the hidden class
+    otherLeadersSection.classList.toggle("hidden");
+
+    // Update the button text
+    if (otherLeadersSection.classList.contains("hidden")) {
+        viewLeadersButton.textContent = "View Other Leaders";
+    } else {
+        viewLeadersButton.textContent = "Hide Other Leaders";
+    }
+});
     //form script
     const form = document.getElementById("contactForm");
   const formStatus = document.getElementById("formStatus");
@@ -893,6 +901,5 @@ form button:hover {
     submitButton.textContent = "Submit";
   });
   </script>
-
 </body>
 </html>

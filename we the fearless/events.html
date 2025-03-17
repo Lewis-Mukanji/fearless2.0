@@ -33,6 +33,8 @@
   <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
 </div>
 
+<!-- Add this HTML for the snackbar -->
+<div id="snackbar"></div>
 
   <!-- Hero Section -->
   <section class="hero-section">
@@ -226,14 +228,14 @@
   </div>
 </section>
 
-<!-- Add Modal HTML -->
-<div class="modal" id="payment-modal">
+<!-- Add Modal HTML for M-Pesa Payment -->
+<div class="modal" id="mpesa-modal">
   <div class="modal-content">
     <h3>Complete Your Purchase</h3>
     <input type="text" id="user-name" placeholder="Full Name" required>
     <input type="email" id="user-email" placeholder="Email Address" required>
     <input type="text" id="user-phone" placeholder="Phone Number" required>
-    <button id="pay-button">Pay via MPesa</button>
+    <button id="confirm-mpesa-button">Confirm Payment via MPesa</button>
   </div>
 </div>
 <section class="ticket-section">
@@ -594,49 +596,181 @@ galleryButton.addEventListener('click', () => {
 });
  </script> 
  <script>
-  document.getElementById("purchase-button").addEventListener("click", function () {
-      const ticketType = document.getElementById("ticket-type").value;
-      const quantity = document.getElementById("ticket-quantity").value;
-      const name = document.getElementById("user-name").value;
-      const email = document.getElementById("user-email").value;
-      const phone = document.getElementById("user-phone").value;
-  
-      if (!name || !email || !phone || quantity <= 0) {
-          alert("Please fill all details correctly.");
-          return;
+  // Function to generate a unique ticket number
+function generateTicketNumber() {
+  return `TICKET-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+}
+
+// Function to generate a QR code
+async function generateQRCode(data) {
+  const qrCode = await QRCode.toDataURL(data);
+  return qrCode;
+}
+
+// Purchase button logic
+document.getElementById("purchase-button").addEventListener("click", function () {
+  const quantity = parseInt(document.getElementById("ticket-quantity").value);
+  if (quantity > 0) {
+    document.getElementById("mpesa-modal").style.display = "flex"; // Show M-Pesa modal
+  } else {
+    alert("Please select a ticket quantity before proceeding.");
+  }
+});
+
+// Confirm M-Pesa payment button logic
+document.getElementById("confirm-mpesa-button").addEventListener("click", async function () {
+  const name = document.getElementById("user-name").value;
+  const email = document.getElementById("user-email").value;
+  const phone = document.getElementById("user-phone").value;
+  const ticketType = document.getElementById("ticket-type").value;
+  const quantity = parseInt(document.getElementById("ticket-quantity").value);
+
+  if (!name || !email || !phone || quantity <= 0) {
+    alert("Please fill all details correctly.");
+    return;
+  }
+
+  const totalCost = ticketType * quantity;
+  const ticketNumber = generateTicketNumber();
+
+  // Generate QR code data
+  const qrCodeData = `Ticket Number: ${ticketNumber}\nEvent: The Fearless Movement Camp\nName: ${name}\nEmail: ${email}\nPhone: ${phone}`;
+  const qrCodeImage = await generateQRCode(qrCodeData);
+
+  // Prepare ticket data
+  const ticketData = {
+  userEmail: email,
+  name: name,
+  phone: phone,
+};
+
+  // Send ticket data to the server
+  fetch("http://localhost:5000/api/purchase-ticket", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(ticketData),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        alert("Purchase successful! Check your email for the ticket.");
+        document.getElementById("mpesa-modal").style.display = "none"; // Close modal
+      } else {
+        alert("Purchase failed. Please try again.");
       }
-  
-      const ticketData = {
-          name,
-          email,
-          phone,
-          ticketType,
-          quantity,
-          totalCost: ticketType * quantity
-      };
-  
-      fetch("http://localhost:5000/api/purchase-ticket", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify(ticketData),
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("An error occurred while processing your request.");
+    });
+});
+
+// Close modal on outside click
+document.getElementById("mpesa-modal").addEventListener("click", function (e) {
+  if (e.target === this) {
+    this.style.display = "none";
+  }
+});
+</script>
+ 
+<script>
+  // Function to generate a unique ticket number
+  function generateTicketNumber() {
+    return `TICKET-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+  }
+
+  // Function to generate a QR code
+  async function generateQRCode(data) {
+    const qrCode = await QRCode.toDataURL(data);
+    return qrCode;
+  }
+
+  // Purchase button logic
+  document.getElementById("purchase-button").addEventListener("click", function () {
+    const quantity = parseInt(document.getElementById("ticket-quantity").value);
+    if (quantity > 0) {
+      document.getElementById("mpesa-modal").style.display = "flex"; // Show M-Pesa modal
+    } else {
+      alert("Please select a ticket quantity before proceeding.");
+    }
+  });
+
+  // Confirm M-Pesa payment button logic
+  document.getElementById("confirm-mpesa-button").addEventListener("click", async function () {
+    const name = document.getElementById("user-name").value;
+    const email = document.getElementById("user-email").value;
+    const phone = document.getElementById("user-phone").value;
+    const ticketType = document.getElementById("ticket-type").value;
+    const quantity = parseInt(document.getElementById("ticket-quantity").value);
+
+    if (!name || !email || !phone || quantity <= 0) {
+      alert("Please fill all details correctly.");
+      return;
+    }
+
+    const totalCost = ticketType * quantity;
+    const ticketNumber = generateTicketNumber();
+
+    // Generate QR code data
+    const qrCodeData = `Ticket Number: ${ticketNumber}\nEvent: The Fearless Movement Camp\nName: ${name}\nEmail: ${email}\nPhone: ${phone}`;
+    const qrCodeImage = await generateQRCode(qrCodeData);
+
+    // Prepare ticket data
+    const ticketData = {
+      name,
+      email,
+      phone,
+      ticketType,
+      quantity,
+      totalCost,
+      ticketNumber,
+      qrCodeImage,
+    };
+
+    // Send ticket data to the server
+    fetch("http://localhost:5000/api/purchase-ticket", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(ticketData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          alert("Purchase successful! Check your email for the ticket.");
+          document.getElementById("mpesa-modal").style.display = "none"; // Close modal
+        } else {
+          alert("Purchase failed. Please try again.");
+        }
       })
-      .then(response => response.json())
-      .then(data => {
-          if (data.success) {
-              alert("Purchase successful! Check your email for the ticket.");
-          } else {
-              alert("Purchase failed. Please try again.");
-          }
-      })
-      .catch(error => {
-          console.error("Error:", error);
-          alert("An error occurred while processing your request.");
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("An error occurred while processing your request.");
       });
   });
-  </script>  
- 
- 
+
+  // Close modal on outside click
+  document.getElementById("mpesa-modal").addEventListener("click", function (e) {
+    if (e.target === this) {
+      this.style.display = "none";
+    }
+  });
+
+  // Function to show snackbar
+  function showSnackbar(message, type = 'success') {
+    const snackbar = document.getElementById('snackbar');
+    snackbar.textContent = message;
+    snackbar.className = `snackbar ${type} show`;
+
+    // Hide after 3 seconds
+    setTimeout(() => {
+      snackbar.className = 'snackbar';
+    }, 3000);
+  }
+</script>
+
 </body>
 </html>

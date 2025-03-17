@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mysql = require('mysql2');
 const sendEmail = require('./mailer');
+const QRCode = require('qrcode');
 require('dotenv').config();
 
 const app = express();
@@ -42,7 +43,28 @@ db.query(`CREATE TABLE IF NOT EXISTS donations (
     payment_method VARCHAR(50) NOT NULL,
     amount DECIMAL(10,2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);`);
+);`, (err) => {
+    if (err) {
+        console.error('Error creating donations table:', err);
+    } else {
+        console.log('Donations table created or already exists.');
+    }
+});
+
+// Create tickets table
+db.query(`CREATE TABLE IF NOT EXISTS tickets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_email VARCHAR(255) NOT NULL,
+    ticket_number VARCHAR(50) NOT NULL,
+    qr_code TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`, (err) => {
+    if (err) {
+        console.error('Error creating tickets table:', err);
+    } else {
+        console.log('Tickets table created or already exists.');
+    }
+});
 
 // Create orders table
 db.query(`CREATE TABLE IF NOT EXISTS orders (
@@ -50,7 +72,13 @@ db.query(`CREATE TABLE IF NOT EXISTS orders (
     items JSON NOT NULL,
     total DECIMAL(10,2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);`);
+);`, (err) => {
+    if (err) {
+        console.error('Error creating orders table:', err);
+    } else {
+        console.log('Orders table created or already exists.');
+    }
+});
 
 // Route to handle merchandise orders
 app.post('/api/send-order', async (req, res) => {
@@ -100,6 +128,72 @@ app.post('/api/send-order', async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Failed to process order',
+            error: error.message
+        });
+    }
+});
+
+// Route to handle ticket purchases
+app.post('/api/purchase-ticket', async (req, res) => {
+    try {
+        const { name, email, phone, ticketType, quantity, totalCost } = req.body;
+
+        if (!name || !email || !phone || !ticketType || !quantity || !totalCost) {
+            return res.status(400).json({
+                success: false,
+                message: 'All fields are required.'
+            });
+        }
+
+        // Generate a unique ticket number
+        const ticketNumber = `TICKET-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+        // Generate QR code
+        const qrCodeData = `Ticket Number: ${ticketNumber}\nEvent: The Fearless Movement Camp\nName: ${name}\nEmail: ${email}\nPhone: ${phone}`;
+        const qrCodeImage = await QRCode.toDataURL(qrCodeData);
+
+        // Save ticket to database
+        const sql = 'INSERT INTO tickets (user_email, ticket_number, qr_code) VALUES (?, ?, ?)';
+        db.query(sql, [email, ticketNumber, qrCodeImage], (err, result) => {
+            if (err) {
+                console.error('Error saving ticket to database:', err);
+                return res.status(500).json({
+                    success: false,
+                    message: 'Failed to save ticket'
+                });
+            }
+
+            // Send email with ticket details
+            const templateData = {
+                name,
+                email,
+                phone,
+                ticketType,
+                quantity,
+                totalCost,
+                ticketNumber,
+                qrCodeImage,
+            };
+
+            sendEmail(
+                email,
+                'Your Ticket Purchase Confirmation',
+                templateData,
+                'ticket'
+            );
+
+            res.status(200).json({
+                success: true,
+                message: 'Ticket purchased successfully',
+                ticketNumber,
+                qrCodeImage,
+            });
+        });
+    } catch (error) {
+        console.error('Error processing ticket purchase:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to process ticket purchase',
             error: error.message
         });
     }
@@ -197,7 +291,7 @@ app.post('/api/send-email', async (req, res) => {
         const templateData = {
             name,
             email,
-            phone: phone || 'Not provided',
+            phone: phone || 'Not provided', 
             message
         };
         

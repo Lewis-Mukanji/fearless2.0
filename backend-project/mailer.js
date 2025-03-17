@@ -15,8 +15,36 @@ const getEmailTemplate = async (templateData, templateType = 'contact') => {
   try {
     let template;
     
-    if (templateType === 'order') {
-      // Create HTML for order items
+    if (templateType === 'ticket') {
+      template = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .ticket-info { margin-top: 20px; }
+            .qr-code { margin-top: 20px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h2>Your Ticket Purchase Confirmation</h2>
+            <p>Thank you for purchasing a ticket. Below are your ticket details:</p>
+            
+            <div class="ticket-info">
+              <p><strong>Ticket Number:</strong> ${templateData.ticketNumber}</p>
+            </div>
+            
+            <div class="qr-code">
+              <p><strong>QR Code:</strong></p>
+              <img src="${templateData.qrCodeImage}" alt="QR Code" />
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    } else if (templateType === 'order') {
       const itemsList = templateData.items.map(item => `
         <tr>
           <td style="padding: 10px; border-bottom: 1px solid #eee;">${item.name}</td>
@@ -98,7 +126,15 @@ const sendEmail = async (to, subject, templateData, templateType = 'contact') =>
     // Create plain text version based on template type
     let textContent;
     
-    if (templateType === 'order') {
+    if (templateType === 'ticket') {
+      textContent = `
+Ticket Purchase Confirmation
+
+Ticket Number: ${templateData.ticketNumber}
+
+Please find your QR code in the HTML version of this email.
+      `;
+    } else if (templateType === 'order') {
       const itemsList = templateData.items.map(item => 
         `${item.name} x${item.quantity} - KSh ${item.price * item.quantity}`
       ).join('\n');
