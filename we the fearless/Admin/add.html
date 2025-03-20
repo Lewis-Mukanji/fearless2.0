@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recent Events Section with Image Upload</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .recent-events-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+        }
+
+        .pagination .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin: 0 5px;
+        }
+
+        .pagination .dot.active {
+            background-color: #ff3a3a;
+        }
+
+        .next-button {
+            width: 32px;
+            height: 32px;
+            background-color: #ff3a3a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .event-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .event-image-container {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .event-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-upload {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-label {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .upload-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .event-details {
+            padding: 15px;
+        }
+
+        .event-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .event-location {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .event-description {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .event-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .event-price {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .event-meta {
+            display: flex;
+            align-items: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .event-date {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        .event-time {
+            display: flex;
+            align-items: center;
+        }
+
+        .event-stats {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .icon {
+            margin-right: 5px;
+        }
+
+        /* Admin panel styles */
+        .admin-panel {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .admin-panel h3 {
+            margin-bottom: 15px;
+        }
+
+        .admin-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .form-group textarea {
+            height: 100px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .save-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .save-button:hover {
+            background-color: #45a049;
+        }
+
+        @media (max-width: 768px) {
+            .events-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .admin-form {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="recent-events-container">
+        <div class="admin-panel">
+            <h3>Add New Event</h3>
+            <form class="admin-form" id="eventForm">
+                <div class="form-group">
+                    <label for="eventTitle">Event Title</label>
+                    <input type="text" id="eventTitle" name="eventTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventLocation">Location</label>
+                    <input type="text" id="eventLocation" name="eventLocation" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventPrice">Price ($)</label>
+                    <input type="number" id="eventPrice" name="eventPrice" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Date</label>
+                    <input type="date" id="eventDate" name="eventDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventTime">Time</label>
+                    <input type="time" id="eventTime" name="eventTime" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventSold">Tickets Sold</label>
+                    <input type="number" id="eventSold" name="eventSold" required>
+                </div>
+                <div class="form-group full-width">
+                    <label for="eventDescription">Description</label>
+                    <textarea id="eventDescription" name="eventDescription" required></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <button type="submit" class="save-button">Add Event</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="header">
+            <h2>Recent Events</h2>
+            <div class="pagination">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="next-button">
+                    &rarr;
+                </div>
+            </div>
+        </div>
+        
+        <div class="events-grid" id="eventsGrid">
+            <!-- Event Card 1 -->
+            <div class="event-card">
+                <div class="event-image-container">
+                    <img src="img/fee.jpeg" alt="Event Image" class="event-image" id="eventImg1">
+                    <label class="upload-label">
+                        <span class="upload-icon">📸</span>
+                        Click to upload image
+                    </label>
+                    <input type="file" class="image-upload" accept="image/*" onchange="loadImage(this, 'eventImg1')">
+                </div>
+                <div class="event-details">
+                    <h3 class="event-title">International Live Choice Festivals (2020)</h3>
+                    <p class="event-location">Manchester, London</p>
+                    <p class="event-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna...</p>
+                </div>
+                <div class="event-footer">
+                    <div class="event-price">$124.00</div>
+                    <div class="event-meta">
+                        <div class="event-date">
+                            <span class="icon">📅</span> June 25, 2020
+                        </div>
+                    </div>
+                </div>
+                <div class="event-footer">
+                    <div class="event-stats">541 sold</div>
+                    <div class="event-time">
+                        <span class="icon">⏰</span> 08:30 AM
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Card 2 -->
+            <div class="event-card">
+                <div class="event-image-container">
+                    <img src="https://via.placeholder.com/400x200/333333/ffffff?text=Upload+Image" alt="Event Image" class="event-image" id="eventImg2">
+                    <label class="upload-label">
+                        <span class="upload-icon">📸</span>
+                        Click to upload image
+                    </label>
+                    <input type="file" class="image-upload" accept="image/*" onchange="loadImage(this, 'eventImg2')">
+                </div>
+                <div class="event-details">
+                    <h3 class="event-title">Evento Indonesian Authors Meetup 2020</h3>
+                    <p class="event-location">Medan, Indonesia</p>
+                    <p class="event-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna...</p>
+                </div>
+                <div class="event-footer">
+                    <div class="event-price">$124.00</div>
+                    <div class="event-meta">
+                        <div class="event-date">
+                            <span class="icon">📅</span> June 20, 2020
+                        </div>
+                    </div>
+                </div>
+                <div class="event-footer">
+                    <div class="event-stats">561 sold</div>
+                    <div class="event-time">
+                        <span class="icon">⏰</span> 08:30 AM
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Card 3 -->
+            <div class="event-card">
+                <div class="event-image-container">
+                    <img src="https://via.placeholder.com/400x200/4CAF50/ffffff?text=Upload+Image" alt="Event Image" class="event-image" id="eventImg3">
+                    <label class="upload-label">
+                        <span class="upload-icon">📸</span>
+                        Click to upload image
+                    </label>
+                    <input type="file" class="image-upload" accept="image/*" onchange="loadImage(this, 'eventImg3')">
+                </div>
+                <div class="event-details">
+                    <h3 class="event-title">Evento Albuor Community Fun Hiking at Sibayak Mt.</h3>
+                    <p class="event-location">London, United Kingdom</p>
+                    <p class="event-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna...</p>
+                </div>
+                <div class="event-footer">
+                    <div class="event-price">$124.00</div>
+                    <div class="event-meta">
+                        <div class="event-date">
+                            <span class="icon">📅</span> June 20, 2020
+                        </div>
+                    </div>
+                </div>
+                <div class="event-footer">
+                    <div class="event-stats">141 sold</div>
+                    <div class="event-time">
+                        <span class="icon">⏰</span> 08:30 AM
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to load and display uploaded images
+        function loadImage(input, imgId) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    document.getElementById(imgId).src = e.target.result;
+                    // Hide the upload label when an image is uploaded
+                    input.parentElement.querySelector('.upload-label').style.display = 'none';
+                };
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Function to format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { month: 'long', day: 'numeric', year: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Function to format time
+        function formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':');
+            const date = new Date();
+            date.setHours(parseInt(hours));
+            date.setMinutes(parseInt(minutes));
+            return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        }
+
+        // Function to add a new event
+        document.getElementById('eventForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('eventTitle').value;
+            const location = document.getElementById('eventLocation').value;
+            const price = document.getElementById('eventPrice').value;
+            const date = document.getElementById('eventDate').value;
+            const time = document.getElementById('eventTime').value;
+            const sold = document.getElementById('eventSold').value;
+            const description = document.getElementById('eventDescription').value;
+            
+            // Create a new event card
+            const newEvent = document.createElement('div');
+            newEvent.className = 'event-card';
+            
+            // Generate a unique ID for the image
+            const imgId = 'eventImg' + Date.now();
+            
+            // Create event card HTML
+            newEvent.innerHTML = `
+                <div class="event-image-container">
+                    <img src="https://via.placeholder.com/400x200/3498db/ffffff?text=Upload+Image" alt="Event Image" class="event-image" id="${imgId}">
+                    <label class="upload-label">
+                        <span class="upload-icon">📸</span>
+                        Click to upload image
+                    </label>
+                    <input type="file" class="image-upload" accept="image/*" onchange="loadImage(this, '${imgId}')">
+                </div>
+                <div class="event-details">
+                    <h3 class="event-title">${title}</h3>
+                    <p class="event-location">${location}</p>
+                    <p class="event-description">${description}</p>
+                </div>
+                <div class="event-footer">
+                    <div class="event-price">$${parseFloat(price).toFixed(2)}</div>
+                    <div class="event-meta">
+                        <div class="event-date">
+                            <span class="icon">📅</span> ${formatDate(date)}
+                        </div>
+                    </div>
+                </div>
+                <div class="event-footer">
+                    <div class="event-stats">${sold} sold</div>
+                    <div class="event-time">
+                        <span class="icon">⏰</span> ${formatTime(time)}
+                    </div>
+                </div>
+            `;
+            
+            // Add the new event card to the grid
+            document.getElementById('eventsGrid').prepend(newEvent);
+            
+            // Reset the form
+            document.getElementById('eventForm').reset();
+            
+            // Show success message
+            alert('Event added successfully!');
+        });
+    </script>
+</body>
+</html>
