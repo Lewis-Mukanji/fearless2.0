@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <style>
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #1a1a1a; /* Dark background color */
+    color: #ffffff; /* White text color */
+    display: flex;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    background-color: #1a1a1a; /* Dark background color */
+    height: 100vh;
+    padding: 20px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.sidebar-logo span {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff; /* White text color */
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    color: #ffffff; /* White text color */
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-item:hover {
+    background-color: #333333; /* Slightly lighter dark color on hover */
+}
+
+.nav-item.active {
+    background-color: #3b82f6; /* Primary color */
+    color: white;
+}
+
+.nav-item span {
+    margin-right: 10px;
+}
+
+/* Main Content Styles */
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+.page-title {
+    font-size: 32px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.recent-events-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #2a2a2a; /* Slightly lighter dark color for container */
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border: 1px solid #3a3a3a; /* Grey border color */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h2 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Button styles */
+.add-button {
+    background-color: #0d6efd; /* Primary color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.add-button:hover {
+    background-color: #0b5ed7; /* Darker primary color on hover */
+}
+
+.add-button span {
+    font-size: 18px;
+    margin-right: 8px;
+}
+
+/* Table Styles */
+.events-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.events-table th {
+    background-color: #333333; /* Slightly lighter dark color */
+    text-align: left;
+    padding: 12px 15px;
+    font-weight: bold;
+    border-bottom: 1px solid #3a3a3a; /* Grey border color */
+    color: #ffffff; /* White text color */
+}
+
+.events-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #3a3a3a; /* Grey border color */
+    color: #ffffff; /* White text color */
+}
+
+.status-badge {
+    background-color: #d1e7dd; /* Light green background */
+    color: #0f5132; /* Dark green text */
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 14px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn {
+    color: #0d6efd; /* Primary color */
+    cursor: pointer;
+}
+
+.delete-btn {
+    color: #dc3545; /* Danger color */
+    cursor: pointer;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+}
+
+.pagination .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ddd;
+    margin: 0 5px;
+}
+
+.pagination .dot.active {
+    background-color: #ff3a3a; /* Active dot color */
+}
+
+.next-button {
+    width: 32px;
+    height: 32px;
+    background-color: #ff3a3a; /* Next button color */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.event-card {
+    border: 1px solid #3a3a3a; /* Grey border color */
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #2a2a2a; /* Slightly lighter dark color */
+}
+
+.event-image-container {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    background-color: #333333; /* Slightly lighter dark color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.event-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-upload {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-label {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #666666; /* Light grey text color */
+    font-size: 14px;
+    text-align: center;
+    pointer-events: none;
+}
+
+.upload-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.event-details {
+    padding: 15px;
+}
+
+.event-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #ffffff; /* White text color */
+}
+
+.event-location {
+    color: #d1d5db; /* Light grey text color */
+    margin-bottom: 10px;
+}
+
+.event-description {
+    color: #d1d5db; /* Light grey text color */
+    font-size: 14px;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.event-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-top: 1px solid #3a3a3a; /* Grey border color */
+}
+
+.event-price {
+    font-weight: bold;
+    font-size: 18px;
+    color: #ffffff; /* White text color */
+}
+
+.event-meta {
+    display: flex;
+    align-items: center;
+    color: #d1d5db; /* Light grey text color */
+    font-size: 14px;
+}
+
+.event-date {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.event-time {
+    display: flex;
+    align-items: center;
+}
+
+.event-stats {
+    color: #d1d5db; /* Light grey text color */
+    font-size: 14px;
+}
+
+.icon {
+    margin-right: 5px;
+}
+
+/* Admin panel styles */
+.admin-panel {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #2a2a2a; /* Slightly lighter dark color */
+    border-radius: 8px;
+    border: 1px solid #3a3a3a; /* Grey border color */
+    display: none; /* Hidden by default */
+}
+
+.admin-panel h3 {
+    margin-bottom: 15px;
+    color: #ffffff; /* White text color */
+}
+
+.admin-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #ffffff; /* White text color */
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #3a3a3a; /* Grey border color */
+    border-radius: 4px;
+    background-color: #1a1a1a; /* Dark background color */
+    color: #ffffff; /* White text color */
+}
+
+.form-group textarea {
+    height: 100px;
+}
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+.save-button {
+    background-color: #4CAF50; /* Success color */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.save-button:hover {
+    background-color: #45a049; /* Darker success color on hover */
+}
+
+@media (max-width: 768px) {
+    .events-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .admin-form {
+        grid-template-columns: 1fr;
+    }
+    .form-group.full-width {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .events-grid {
+        grid-template-columns: 1fr;
+    }
+}
+    </style>
+  
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <span></span>
+            <span>The Fearless Movement</span>
+        </div>
+        <nav>
+            <a href="admin.html" class="nav-item">
+                <span>📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item active">
+                <span>🎫</span>
+                <span>Events</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span>💬</span>
+                <span>Enquiries</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span>💰</span>
+                <span>Donations</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span>👥</span>
+                <span>Members</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span>📝</span>
+                <span>Content</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 class="page-title">Events</h1>
+        
+        <div class="recent-events-container">
+            <div class="header">
+                <h2>Event Management</h2>
+                <button class="add-button" id="toggleFormButton">
+                    <span>+</span> Add New Event
+                </button>
+            </div>
+
+            <!-- Admin Panel - Hidden by Default -->
+            <div class="admin-panel" id="adminPanel">
+                <h3>Add New Event</h3>
+                <form class="admin-form" id="eventForm">
+                    <div class="form-group">
+                        <label for="eventTitle">Event Title</label>
+                        <input type="text" id="eventTitle" name="eventTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventLocation">Location</label>
+                        <input type="text" id="eventLocation" name="eventLocation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventPrice">Price ($)</label>
+                        <input type="number" id="eventPrice" name="eventPrice" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDate">Date</label>
+                        <input type="date" id="eventDate" name="eventDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventTime">Time</label>
+                        <input type="time" id="eventTime" name="eventTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventSold">Tickets Sold</label>
+                        <input type="number" id="eventSold" name="eventSold" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="eventDescription">Description</label>
+                        <textarea id="eventDescription" name="eventDescription" required></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <button type="submit" class="save-button">Add Event</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Events Table Display -->
+            <table class="events-table">
+                <thead>
+                    <tr>
+                        <th>Event Name</th>
+                        <th>Date</th>
+                        <th>Venue</th>
+                        <th>Status</th>
+                        <th>Revenue</th>
+                        <th>Tickets Sold</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="eventsTableBody">
+                    <tr>
+                        <td>Fearless Gala</td>
+                        <td>2024-04-15</td>
+                        <td>Grand Ballroom</td>
+                        <td><span class="status-badge">Active</span></td>
+                        <td>Ksh. 100000</td>
+                        <td>400</td>
+                        <td class="action-buttons">
+                            <span class="edit-btn">✏️</span>
+                            <span class="delete-btn">🗑️</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Lust Stories</td>
+                        <td>2024-05-20</td>
+                        <td>Theater Hall</td>
+                        <td><span class="status-badge">Active</span></td>
+                        <td>Ksh. 50000</td>
+                        <td>300</td>
+                        <td class="action-buttons">
+                            <span class="edit-btn">✏️</span>
+                            <span class="delete-btn">🗑️</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Food & Wine Expo</td>
+                        <td>2024-06-10</td>
+                        <td>Convention Center</td>
+                        <td><span class="status-badge">Active</span></td>
+                        <td>Ksh. 75000</td>
+                        <td>500</td>
+                        <td class="action-buttons">
+                            <span class="edit-btn">✏️</span>
+                            <span class="delete-btn">🗑️</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="header">
+                <h2>Recent Events</h2>
+                <div class="pagination">
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="next-button">
+                        &rarr;
+                    </div>
+                </div>
+            </div>
+            
+            <div class="events-grid" id="eventsGrid">
+                <!-- Event Card 1 -->
+                <div class="event-card">
+                    <div class="event-image-container">
+                        <img src="https://via.placeholder.com/400x200/333333/ffffff?text=Event+Image" alt="Event Image" class="event-image" id="eventImg1">
+                        <label class="upload-label">
+                            <span class="upload-icon">📸</span>
+                            Click to upload image
+                        </label>
+                        <input type="file" class="image-upload" accept="image/*" onchange="loadImage(this, 'eventImg1')">
+                    </div>
+                    <div class="event-details">
+                        <h3 class="event-title">International Live Choice Festivals (2020)</h3>
+                        <p class="event-location">Manchester, London</p>
+                        <p class="event-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna...</p>
+                    </div>
+                    <div class="event-footer">
+                        <div class="event-price">$124.00</div>
+                        <div class="event-meta">
+                            <div class="event-date">
+                                <span class="icon">📅</span> June 25, 2020
+                            </div>
+                        </div>
+                    </div>
+                    <div class="event-footer">
+                        <div class="event-stats">541 sold</div>
+                        <div class="event-time">
+                            <span class="icon">⏰</span> 08:30 AM
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 2 -->
+                <div class="event-card">
+                    <div class="event-image-container">
+                        <img src="https://via.placeholder.com/400x200/333333/ffffff?text=Event+Image" alt="Event Image" class="event-image" id="eventImg2">
+                        <label class="upload-label">
+                            <span class="upload-icon">📸</span>
+                            Click to upload image
+                        </label>
+                        <input type="file" class="image-upload" accept="image/*" onchange="loadImage(this, 'eventImg2')">
+                    </div>
+                    <div class="event-details">
+                        <h3 class="event-title">Evento Indonesian Authors Meetup 2020</h3>
+                        <p class="event-location">Medan, Indonesia</p>
+                        <p class="event-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna...</p>
+                    </div>
+                    <div class="event-footer">
+                        <div class="event-price">$124.00</div>
+                        <div class="event-meta">
+                            <div class="event-date">
+                                <span class="icon">📅</span> June 20, 2020
+                            </div>
+                        </div>
+                    </div>
+                    <div class="event-footer">
+                        <div class="event-stats">561 sold</div>
+                        <div class="event-time">
+                            <span class="icon">⏰</span> 08:30 AM
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 3 -->
+                <div class="event-card">
+                    <div class="event-image-container">
+                        <img src="https://via.placeholder.com/400x200/4CAF50/ffffff?text=Event+Image" alt="Event Image" class="event-image" id="eventImg3">
+                        <label class="upload-label">
+                            <span class="upload-icon">📸</span>
+                            Click to upload image
+                        </label>
+                        <input type="file" class="image-upload" accept="image/*" onchange="loadImage(this, 'eventImg3')">
+                    </div>
+                    <div class="event-details">
+                        <h3 class="event-title">Evento Albuor Community Fun Hiking at Sibayak Mt.</h3>
+                        <p class="event-location">London, United Kingdom</p>
+                        <p class="event-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna...</p>
+                    </div>
+                    <div class="event-footer">
+                        <div class="event-price">$124.00</div>
+                        <div class="event-meta">
+                            <div class="event-date">
+                                <span class="icon">📅</span> June 20, 2020
+                            </div>
+                        </div>
+                    </div>
+                    <div class="event-footer">
+                        <div class="event-stats">141 sold</div>
+                        <div class="event-time">
+                            <span class="icon">⏰</span> 08:30 AM
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle form visibility
+        document.getElementById('toggleFormButton').addEventListener('click', function() {
+            const adminPanel = document.getElementById('adminPanel');
+            adminPanel.style.display = adminPanel.style.display === 'none' || adminPanel.style.display === '' ? 'block' : 'none';
+        });
+
+        // Function to load and display uploaded images
+        function loadImage(input, imgId) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    document.getElementById(imgId).src = e.target.result;
+                    // Hide the upload label when an image is uploaded
+                    input.parentElement.querySelector('.upload-label').style.display = 'none';
+                };
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Function to format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { month: 'long', day: 'numeric', year: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Function to format time
+        function formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':');
+            const date = new Date();
+            date.setHours(parseInt(hours));
+            date.setMinutes(parseInt(minutes));
+            return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        }
+
+        // Function to add a new event
+        document.getElementById('eventForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('eventTitle').value;
+            const location = document.getElementById('eventLocation').value;
+            const price = document.getElementById('eventPrice').value;
+            const date = document.getElementById('eventDate').value;
+            const time = document.getElementById('eventTime').value;
+            const sold = document.getElementById('eventSold').value;
+            const description = document.getElementById('eventDescription').value;
+            
+            // Add to table view
+            const tableRow = document.createElement('tr');
+            tableRow.innerHTML = `
+                <td>${title}</td>
+                <td>${date}</td>
+                <td>${location}</td>
+                <td><span class="status-badge">Active</span></td>
+                <td>Ksh. ${(price * sold).toFixed(2)}</td>
+                <td>${sold}</td>
+                <td class="action-buttons">
+                    <span class="edit-btn">✏️</span>
+                    <span class="delete-btn">🗑️</span>
+                </td>
+            `;
+            document.getElementById('eventsTableBody').prepend(tableRow);
+            
+            // Create a new event card
+            const newEvent = document.createElement('div');
+            newEvent.className = 'event-card';
+            
+            // Generate a unique ID for the image
+            const imgId = 'eventImg' + Date.now();
+            
+            // Create event card HTML
+            newEvent.innerHTML = `
+                <div class="event-image-container">
+                    <img src="https://via.placeholder.com/400x200/3498db/ffffff?text=Event+Image" alt="Event Image" class="event-image" id="${imgId}">
+                    <label class="upload-label">
+                        <span class="upload-icon">📸</span>
+                        Click to upload image
+                    </label>
+                    <input type="file" class="image-upload" accept="image/*" onchange="loadImage(this, '${imgId}')">
+                </div>
+                <div class="event-details">
+                    <h3 class="event-title">${title}</h3>
+                    <p class="event-location">${location}</p>
+                    <p class="event-description">${description}</p>
+                </div>
+                <div class="event-footer">
+                    <div class="event-price">$${parseFloat(price).toFixed(2)}</div>
+                    <div class="event-meta">
+                        <div class="event-date">
+                            <span class="icon">📅</span> ${formatDate(date)}
+                        </div>
+                    </div>
+                </div>
+                <div class="event-footer">
+                    <div class="event-stats">${sold} sold</div>
+                    <div class="event-time">
+                        <span class="icon">⏰</span> ${formatTime(time)}
+                    </div>
+                </div>
+            `;
+            
+            // Add the new event card to the grid
+            document.getElementById('eventsGrid').prepend(newEvent);
+            
+            // Reset the form
+            document.getElementById('eventForm').reset();
+            
+            // Hide the form after submission
+            document.getElementById('adminPanel').style.display = 'none';
+            
+            // Show success message
+            alert('Event added successfully!');
+        });
+
+        // Add event listeners for edit and delete buttons
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('Edit functionality would open here');
+            });
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if(confirm('Are you sure you want to delete this event?')) {
+                    this.closest('tr').remove();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
