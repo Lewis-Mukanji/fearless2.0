@@ -1,0 +1,75 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #1a1a1a; /* Dark background color */
+    color: #ffffff; /* White text color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Login Container */
+.login-container {
+    background-color: #2a2a2a; /* Slightly lighter dark color for container */
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-container h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #ffffff; /* White text color */
+}
+
+/* Input Groups */
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #d1d5db; /* Light gray text color */
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #3a3a3a; /* Darker border color */
+    border-radius: 5px;
+    outline: none;
+    background-color: #1a1a1a; /* Dark background color for input */
+    color: #ffffff; /* White text color for input */
+}
+
+.input-group input:focus {
+    border-color: #3b82f6; /* Primary color */
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+}
+
+/* Login Button */
+button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    color: #ffffff; /* White text color */
+    background-color: #ff6600; /* Orange background color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #ff8533; /* Lighter orange on hover */
+}
