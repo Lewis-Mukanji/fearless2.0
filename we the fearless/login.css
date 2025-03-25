@@ -28,6 +28,13 @@ body {
     color: #ffffff; /* White text color */
 }
 
+/* Logo Styles */
+.logo {
+    width: 100px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
 /* Input Groups */
 .input-group {
     margin-bottom: 20px;

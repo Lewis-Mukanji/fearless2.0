@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
+    <title>Login</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
     <div class="login-container">
-        <h1>Admin Login</h1>
+        <img src="logo/1f.png" alt="Fearless Logo" class="logo">
+        <h1>Login</h1>
         <form id="login-form">
             <div class="input-group">
                 <label for="username">Username</label>
@@ -36,7 +37,7 @@
             // Simple validation (for demonstration purposes)
             if (username === 'admin' && password === 'admin123') {
                 // Redirect to the admin page
-                window.location.href = 'Admin/admin.html';
+                window.location.href = 'admin.html';
             } else {
                 alert('Invalid username or password. Please try again.');
             }
