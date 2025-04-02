@@ -4,42 +4,147 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
-    <div class="login-container">
-        <img src="logo/1f.png" alt="Fearless Logo" class="logo">
-        <h1>Login</h1>
-        <form id="login-form">
-            <div class="input-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
+    <div class="content">
+        <div class="theme-toggle" onclick="toggleTheme()">
+            <i class="fa-solid fa-moon"></i>
+        </div>
+        <div class="login-container">
+            <img src="logo/1f.png" alt="Fearless Logo" class="logo">
+            <h1>Login</h1>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="username">Username or Email</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" required>
+                        <i class="fa fa-eye" id="togglePassword"></i>
+                    </div>
+                </div>
+                <button type="submit">
+                    <div class="btn-content">
+                        <span>Login</span>
+                        <div id="spinner" class="spinner"></div>
+                    </div>
+                </button>
+            </form>
+            <div class="register-link">
+                <!-- <p>Don't have an account? <a href="register.html">Register Now</a></p> -->
             </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit">Login</button>
-        </form>
+        </div>
     </div>
+    
+    <!-- Snackbar -->
+    <div id="snackbar"></div>
 
     <script>
-        // JavaScript to handle form submission and redirection
-        document.getElementById('login-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent the form from submitting normally
-
-            // Get the username and password values
+        // Function to show snackbar
+        function showSnackbar(message, isSuccess = true) {
+            const snackbar = document.getElementById('snackbar');
+            snackbar.textContent = message;
+            snackbar.className = isSuccess ? 'success show' : 'error show';
+            
+            setTimeout(() => { 
+                snackbar.className = snackbar.className.replace('show', ''); 
+            }, 3000);
+        }
+    
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('password');
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                this.classList.remove("fa-eye");
+                this.classList.add("fa-eye-slash");
+            } else {
+                passwordInput.type = "password";
+                this.classList.remove("fa-eye-slash");
+                this.classList.add("fa-eye");
+            }
+        });
+    
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.querySelector('.theme-toggle i');
+            
+            body.classList.toggle('light-mode');
+            
+            if (body.classList.contains('light-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        }
+    
+        // Handle form submission - Updated version
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-
-            // Simple validation (for demonstration purposes)
-            if (username === 'admin' && password === 'admin123') {
-                // Redirect to the admin page
+    
+            // Show loading state
+            const submitBtn = document.querySelector('button[type="submit"]');
+            const spinner = document.getElementById('spinner');
+            submitBtn.disabled = true;
+            spinner.style.display = 'block';
+    
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify({ 
+                        username, 
+                        password 
+                    })
+                });
+    
+                const data = await response.json();
+    
+                if (data.success) {
+                    showSnackbar('Login successful!', true);
+                    
+                    // Store token and user data
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    // Redirect based on response
+                    setTimeout(() => {
+                        window.location.href = data.redirectTo || 'admin.html';
+                    }, 1500);
+                } else {
+                    showSnackbar(data.message || 'Login failed. Invalid credentials.', false);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showSnackbar('An error occurred. Please try again.', false);
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                spinner.style.display = 'none';
+            }
+        });
+    
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('authToken');
+            const user = JSON.parse(localStorage.getItem('user'));
+            
+            if (token && user) {
+                // Redirect to admin page if logged in
                 window.location.href = 'admin.html';
-            } else {
-                alert('Invalid username or password. Please try again.');
             }
         });
     </script>
