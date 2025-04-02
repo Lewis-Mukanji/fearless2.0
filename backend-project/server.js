@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mysql = require('mysql2');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const sendEmail = require('./mailer');
 const QRCode = require('qrcode');
 require('dotenv').config();
@@ -30,6 +32,28 @@ db.connect((err) => {
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
+
+// ==================== DATABASE TABLES CREATION ====================
+
+// Update your users table creation to include new fields
+db.query(`CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    phone VARCHAR(20),
+    is_admin BOOLEAN DEFAULT FALSE,
+    last_login TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`, (err) => {
+    if (err) {
+        console.error('Error creating users table:', err);
+    } else {
+        console.log('Users table created or already exists.');
+    }
+});
 
 // Create donations table
 db.query(`CREATE TABLE IF NOT EXISTS donations (
@@ -79,6 +103,328 @@ db.query(`CREATE TABLE IF NOT EXISTS orders (
         console.log('Orders table created or already exists.');
     }
 });
+
+// Create emails table (for contact form submissions)
+db.query(`CREATE TABLE IF NOT EXISTS emails (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(20),
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`, (err) => {
+    if (err) {
+        console.error('Error creating emails table:', err);
+    } else {
+        console.log('Emails table created or already exists.');
+    }
+});
+
+//create admin  table
+db.query(`CREATE TABLE IF NOT EXISTS admin (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    is_super_admin BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`, (err) => {
+    if (err) {
+        console.error('Error creating admin table:', err);
+    } else {
+        console.log('Admin table created or already exists.');
+    }
+}
+);
+// Add this with your other table creation queries
+db.query(`CREATE TABLE IF NOT EXISTS auth_users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('admin', 'user') DEFAULT 'admin',
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP NULL
+)`, (err) => {
+    if (err) {
+        console.error('Error creating auth_users table:', err);
+    } else {
+        console.log('Auth_users table ready');
+    }
+});
+
+
+// ==================== AUTHENTICATION FUNCTIONS ====================
+
+// Function to send login notification email
+const sendLoginNotification = async (email, username, loginTime, ipAddress) => {
+    try {
+        const templateData = {
+            username,
+            loginTime: new Date(loginTime).toLocaleString(),
+            ipAddress
+        };
+
+        await sendEmail(
+            email, 
+            'Login Notification', 
+            templateData, 
+            'login'
+        );
+    } catch (error) {
+        console.error('Error sending login notification:', error);
+    }
+};
+
+// Authentication Middleware
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (token == null) {
+        return res.status(401).json({ 
+            success: false, 
+            message: 'No token provided' 
+        });
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ 
+                success: false, 
+                message: 'Invalid or expired token' 
+            });
+        }
+        req.user = user;
+        next();
+    });
+};
+
+// ==================== AUTHENTICATION ROUTES ====================
+
+// ==================== ADMIN LOGIN ====================
+
+// ==================== ADMIN REGISTRATION ====================
+app.post('/api/register-admin', async (req, res) => {
+    const { username, password, is_super_admin = false, email } = req.body;
+
+    try {
+        // Validate required fields
+        if (!username || !password || !email) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Username, password, and email are required' 
+            });
+        }
+
+        // Check if admin already exists
+        const [existingAdmin] = await db.promise().query(
+            'SELECT * FROM admin WHERE username = ? OR email = ?', 
+            [username, email]
+        );
+
+        if (existingAdmin.length > 0) {
+            return res.status(409).json({ 
+                success: false, 
+                message: 'Admin username or email already exists' 
+            });
+        }
+
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // Insert new admin
+        await db.promise().query(
+            'INSERT INTO admin (username, password, is_super_admin, email) VALUES (?, ?, ?, ?)', 
+            [username, hashedPassword, is_super_admin, email]
+        );
+
+        // Send welcome email to the new admin with their credentials
+        try {
+            await sendEmail(
+                email,
+                'Your Admin Account Credentials',
+                { 
+                    username, 
+                    is_super_admin, 
+                    password // This is the plain text password - consider security implications
+                },
+                'admin-created'
+            );
+        } catch (emailError) {
+            console.error('Failed to send admin creation email:', emailError);
+            // Don't fail the request, just log the error
+        }
+
+        res.status(201).json({
+            success: true,
+            message: 'Admin created successfully'
+        });
+
+    } catch (error) {
+        console.error('Admin registration error:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Server error during admin registration',
+            error: error.message 
+        });
+    }
+});
+
+
+// Update the registration endpoint to send welcome email
+app.post('/api/auth/register', async (req, res) => {
+    const { username, email, password } = req.body;
+
+    // Validate input
+    if (!username || !email || !password) {
+        return res.status(400).json({ 
+            success: false, 
+            message: 'All fields are required' 
+        });
+    }
+
+    try {
+        // Check if user exists
+        const [existing] = await db.promise().query(
+            'SELECT * FROM auth_users WHERE username = ? OR email = ?',
+            [username, email]
+        );
+
+        if (existing.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: 'Username or email already exists'
+            });
+        }
+
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // Create user
+        await db.promise().query(
+            'INSERT INTO auth_users (username, email, password) VALUES (?, ?, ?)',
+            [username, email, hashedPassword]
+        );
+
+        // Send welcome email to the new user
+        try {
+            await sendEmail(
+                email,
+                'Welcome to The Fearless Movement!',
+                { 
+                    username, 
+                    email,
+                    password // Note: This is the plain text password - consider security implications
+                },
+                'user-welcome'
+            );
+        } catch (emailError) {
+            console.error('Failed to send welcome email:', emailError);
+            // Don't fail the request, just log the error
+        }
+
+        res.status(201).json({
+            success: true,
+            message: 'User registered successfully'
+        });
+
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Server error during registration'
+        });
+    }
+});
+ 
+app.post('/api/auth/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({
+            success: false,
+            message: 'Username and password are required'
+        });
+    }
+
+    try {
+        // Find user
+        const [users] = await db.promise().query(
+            'SELECT * FROM auth_users WHERE username = ?',
+            [username]
+        );
+
+        if (users.length === 0) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid credentials'
+            });
+        }
+
+        const user = users[0];
+
+        // Verify password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid credentials'
+            });
+        }
+
+        // Update last login
+        await db.promise().query(
+            'UPDATE auth_users SET last_login = NOW() WHERE id = ?',
+            [user.id]
+        );
+
+        // Create token
+        const token = jwt.sign(
+            {
+                id: user.id,
+                username: user.username,
+                role: user.role
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        res.json({
+            success: true,
+            token,
+            user: {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                role: user.role
+            },
+            redirectTo: user.role === 'admin' ? 'admin.html' : 'dashboard.html'
+        });
+
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Server error during login'
+        });
+    }
+});
+
+
+// Protected Admin Route Example
+app.get('/api/admin-dashboard', authenticateToken, (req, res) => {
+    // Only authenticated admin users can access this route
+    res.json({ 
+        success: true, 
+        message: 'Welcome to admin dashboard',
+        user: req.user 
+    });
+});
+
+// ==================== APPLICATION ROUTES ====================
 
 // Route to handle merchandise orders
 app.post('/api/send-order', async (req, res) => {
@@ -195,6 +541,93 @@ app.post('/api/purchase-ticket', async (req, res) => {
             success: false,
             message: 'Failed to process ticket purchase',
             error: error.message
+        });
+    }
+});
+
+
+//route to handle admin registration 
+app.post('/api/register', async (req, res) => {
+    try {
+        const { email, firstName, lastName, password, phone } = req.body;
+
+        // Validate required fields
+        if (!email || !firstName || !lastName || !password) {
+            return res.status(400).json({ 
+                success: false,
+                message: 'Email, first name, last name, and password are required' 
+            });
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ 
+                success: false,
+                message: 'Please enter a valid email address' 
+            });
+        }
+
+        // Validate password strength (at least 8 chars, 1 uppercase, 1 lowercase, 1 number)
+        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ 
+                success: false,
+                message: 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number'
+            });
+        }
+
+        // Check if user already exists
+        const [existingUsers] = await db.promise().query(
+            'SELECT * FROM users WHERE email = ?', 
+            [email]
+        );
+
+        if (existingUsers.length > 0) {
+            return res.status(409).json({ 
+                success: false, 
+                message: 'Email already registered' 
+            });
+        }
+
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // Create username (email before @)
+        const username = email.split('@')[0];
+
+        // Insert new user
+        await db.promise().query(
+            'INSERT INTO users (username, email, password, first_name, last_name, phone) VALUES (?, ?, ?, ?, ?, ?)', 
+            [username, email, hashedPassword, firstName, lastName, phone || null]
+        );
+
+        // In a real application, you would:
+        // 1. Send a verification email
+        // 2. Maybe generate a JWT token for immediate login
+        // 3. Log the registration event
+
+        res.status(201).json({
+            success: true,
+            message: 'Registration successful'
+        });
+
+    } catch (error) {
+        console.error('Registration error:', error);
+        
+        // Handle duplicate entry error
+        if (error.code === 'ER_DUP_ENTRY') {
+            return res.status(409).json({ 
+                success: false, 
+                message: 'Email already registered' 
+            });
+        }
+
+        res.status(500).json({ 
+            success: false, 
+            message: 'Server error during registration',
+            error: error.message 
         });
     }
 });
@@ -340,6 +773,7 @@ app.post('/api/submit-form', async (req, res) => {
     }
 });
 
+// Root route
 app.get('/', (req, res) => {
     res.send('Get ready for the fearless!!');
 });
