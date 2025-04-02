@@ -54,10 +54,21 @@
             <div class="header">
                 <h1 class="page-title">Dashboard Overview</h1>
                 <div class="user-profile">
-                    <span>Admin User</span>
-                    <div class="user-avatar">A</div>
+                    <span id="username-display">Admin User</span>
+                    <div class="user-avatar" title="Click to logout">A</div>
                 </div>
             </div>
+
+            <!-- Logout Confirmation Snackbar -->
+<div id="logout-snackbar" class="snackbar">
+    <div class="snackbar-content">
+      <span>Are you sure you want to logout?</span>
+      <div class="snackbar-actions">
+        <button id="confirm-logout" class="snackbar-btn confirm">Logout</button>
+        <button id="cancel-logout" class="snackbar-btn cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
             
             <div class="stats-grid">
                 <div class="stat-card">
@@ -550,6 +561,56 @@
      <!-- <div class="theme-toggle" onclick="toggleTheme()">
         <i class="fa-solid fa-moon"></i>
     </div> -->
+
+    <script>
+        // Snackbar functions
+        function showSnackbar() {
+          const snackbar = document.getElementById('logout-snackbar');
+          snackbar.classList.add('show');
+          
+          // Add backdrop effect
+          document.body.style.overflow = 'hidden';
+        }
+      
+        function hideSnackbar() {
+          const snackbar = document.getElementById('logout-snackbar');
+          snackbar.classList.remove('show');
+          document.body.style.overflow = '';
+        }
+      
+        // Logout functionality
+        document.addEventListener('DOMContentLoaded', function() {
+          // Display current user
+          const user = JSON.parse(localStorage.getItem('user')) || 
+                       JSON.parse(localStorage.getItem('adminUser'));
+          
+          if (user) {
+            document.getElementById('username-display').textContent = user.username || 'Admin';
+            document.querySelector('.user-avatar').textContent = user.username.charAt(0).toUpperCase();
+          }
+          
+          // Avatar click shows snackbar
+          document.querySelector('.user-avatar').addEventListener('click', showSnackbar);
+          
+          // Snackbar button handlers
+          document.getElementById('confirm-logout').addEventListener('click', function() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            localStorage.removeItem('adminUser');
+            window.location.href = 'login.html';
+          });
+          
+          document.getElementById('cancel-logout').addEventListener('click', hideSnackbar);
+          
+          // Close snackbar when clicking outside
+          document.addEventListener('click', function(e) {
+            if (!document.getElementById('logout-snackbar').contains(e.target) && 
+                e.target !== document.querySelector('.user-avatar')) {
+              hideSnackbar();
+            }
+          });
+        });
+      </script>
 
     <script>
         function toggleTheme() {
