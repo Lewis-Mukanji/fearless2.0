@@ -3,113 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Form Submission</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>New Message from {name}</title>
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'poppins', sans-serif;
             line-height: 1.6;
             color: #333333;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-image: url('img/fl.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
         }
-        .container {
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 30px;
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(5px);
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .email-header {
+            background-color: #4a154b;
+            color: #ffffff;
+            padding: 20px 30px;
+            text-align: center;
         }
         .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .email-content {
+            padding: 30px;
+        }
+        .user-info {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .user-info h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #4a154b;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        .info-item {
+            margin-bottom: 10px;
+        }
+        .info-label {
+            font-weight: bold;
+            display: inline-block;
+            width: 80px;
+        }
+        .message-box {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #4a154b;
+            border-radius: 0 5px 5px 0;
+        }
+        .email-footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #777777;
+            font-size: 14px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #4a154b;
+            color: #ffffff;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                width: 100%;
+                margin: 0;
+                border-radius: 0;
+            }
+            .email-content, .email-header {
+                padding: 15px;
+            }
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
+        .separator {
+            border-top: 1px solid #ddd;
+            margin: 10px 0;
+        }
+        .contact-info {
+            font-size: 0.85em;
+            color: #555;
+            margin-top: 10px;
+            text-align: left;
+        }
+        .logo-img {
             max-width: 150px;
             margin-bottom: 20px;
         }
-        .info-item {
-            margin-bottom: 15px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 15px;
-        }
-        .info-item:last-child {
-            border-bottom: none;
-        }
-        .label {
-            font-weight: 600;
-            color: #2c3e50;
-            display: block;
-            margin-bottom: 5px;
-        }
-        .content {
-            color: #4a5568;
-        }
-        .message-content {
-            white-space: pre-wrap;
-            margin-top: 10px;
-            line-height: 1.8;
-        }
-    .footer p {
-      margin: 5px 0;
-    }
-    .footer img {
-      max-width: 100%;
-      height: auto;
-      margin-top: 10px;
-    }
-    .separator {
-      border-top: 1px solid #ddd;
-      margin: 10px 0;
-    }
-    .contact-info {
-      font-size: 0.85em;
-      color: #555;
-      margin-top: 10px;
-      text-align: left;
-    }
     </style>
 </head>
 <body>
-    <div class="container">
-        <img src="img/fl.png" alt="Logo" class="logo">
-        
-        <div class="info-item">
-            <span class="label">Name</span>
-            <span class="content">{name}</span>
+    <div class="email-container">
+        <div class="email-header">
+            <img src="{logoUrl}" alt="FEARLESS Logo" class="logo-img">
+            <h1 class="logo">FEARLESS</h1>
         </div>
         
-        <div class="info-item">
-            <span class="label">Email</span>
-            <span class="content">{email}</span>
-        </div>
-        
-        <div class="info-item">
-            <span class="label">Phone</span>
-            <span class="content">{phone}</span>
-        </div>
-        
-        <div class="info-item">
-            <span class="label">Message</span>
-            <div class="message-content content">
-                {message}
+        <div class="email-content">
+            <h2>New Submission</h2>
+            
+            <p>Hello {name},</p>
+            
+            <p>You've received a new message from The Fearless Movement through the Fearless admin❕.</p>
+            
+            <div class="user-info">
+                <h3>Contact Information</h3>
+                <div class="info-item">
+                    <span class="info-label">Name:</span> {name}
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email:</span> {email}
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Phone:</span> {phone}
+                </div>
+            <div class="message-box">
+                <h3>Message:</h3>
+                <p>{message}</p>
             </div>
+            
+            <!-- <p>This message was submitted on {submissionDate}.</p> -->
+            
+            <center>
+                <a href="{websiteUrl}" class="button">Visit Our Website</a>
+            </center>
+        </div>
+        
+        <!-- Footer information -->
+        <div class="footer">
+            <p>	This message was sent to <span class=>{email}</span> If you have questions or complaints, please contact us.</p>
+            <div class="separator"></div>
+            <div class="contact-info">
+                <p>Head Office, Clarence Matheny Ministries, Limuru</p>
+                <p>Tel: +254 710 899453| Email: <a href="mailto:thefearlessmovement1@gmail.com">thefearlessmovement1@gmail.com</a></p>
+                <p>Web: <a href="https://www.thefearlessmovement.com" target="_blank">https://www.thefearlessmovement.com</a></p>
+            </div>
+            <img src="{footerImageUrl}" alt="Sustainability Commitment">
         </div>
     </div>
-   <!-- Footer information -->
-   <div class="footer">
-    <p>	This message was sent to <span class=>{email}</span> If you have questions or complaints, please contact us.</p>
-    <div class="separator"></div>
-    <div class="contact-info">
-      <p>Head Office, Clarence Matheny Ministries, Limuru</p>
-      <p>Tel: +254 745 214 040 | Email: <a href="mailto:thefearlessmovement1@gmail.com">thefearlessmovement1@gmail.com</a></p>
-      <p>Web: <a href="https://www.thefearlessmovement.com" target="_blank">https://www.thefearlessmovement.com</a></p>
+    
+    <div class="email-footer">
+        <p>&copy; 2025 FearlessMovement. All rights reserved.</p>
     </div>
-    <img src="fot.png" alt="Sustainability Commitment">
-  </div>
-</div> 
 </body>
 </html>

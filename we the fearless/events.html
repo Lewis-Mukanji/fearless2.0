@@ -403,10 +403,10 @@
   <div class="footer-column">
       <h4>Get In Touch</h4>
       <ul>
-          <li><i class="fas fa-map-marker-alt"></i> 04, Funzi Road Nairobi</li>
-          <li><i class="fas fa-phone"></i> 0745214040</li>
-          <li><i class="fas fa-phone"></i> 0792173752</li>
-          <li><i class="fas fa-envelope"></i> mukanjilewis94@gmail.com</li>
+        <li><i class="fas fa-map-marker-alt"></i> 04, Funzi Road Nairobi</li>
+        <li><i class="fas fa-phone"></i> +254 710 899453</li>
+        <li><i class="fas fa-phone"></i> +254 710 899453</li>
+        <li><i class="fas fa-envelope"></i> thefearlessmovement1@gmail.com</li>
       </ul>
   </div>
 
@@ -418,10 +418,14 @@
 
 
 <script>
-   function toggleMenu() {
+   // Consolidated JavaScript for Event Website
+document.addEventListener("DOMContentLoaded", () => {
+  // Navigation menu toggle
+  function toggleMenu() {
     const navLinks = document.getElementById('nav-links');
     navLinks.classList.toggle('active');
-}
+  }
+
   // Countdown Timer
   const eventDate = new Date("August 25, 2025 00:00:00").getTime();
   
@@ -446,9 +450,7 @@
   // Initialize the countdown on page load
   updateCountdown();
 
-
-  //stat countdown section 
-  document.addEventListener("DOMContentLoaded", () => {
+  // Stats counter animation
   const counters = document.querySelectorAll(".counter");
 
   const startCount = (counter) => {
@@ -483,199 +485,81 @@
   );
 
   counters.forEach((counter) => observer.observe(counter));
-});
 
-  
   // Toggle event description
   function toggleDescription(card) {
     const description = card.querySelector('.event-description');
     const isVisible = description.style.display === 'block';
     description.style.display = isVisible ? 'none' : 'block';
   }
-  </script>
-  <script>
-    // Update Total Price
-    const ticketType = document.getElementById("ticket-type");
-    const ticketQuantity = document.getElementById("ticket-quantity");
-    const totalCost = document.getElementById("total-cost");
-  
-    function updateTotal() {
-      const price = parseInt(ticketType.value);
-      const quantity = parseInt(ticketQuantity.value) || 0;
-      totalCost.textContent = (price * quantity).toLocaleString();
-    }
-  
+
+  // Update Total Price for tickets
+  const ticketType = document.getElementById("ticket-type");
+  const ticketQuantity = document.getElementById("ticket-quantity");
+  const totalCost = document.getElementById("total-cost");
+
+  function updateTotal() {
+    const price = parseInt(ticketType.value);
+    const quantity = parseInt(ticketQuantity.value) || 0;
+    totalCost.textContent = (price * quantity).toLocaleString();
+  }
+
+  if (ticketType && ticketQuantity) {
     ticketType.addEventListener("change", updateTotal);
     ticketQuantity.addEventListener("input", updateTotal);
-  
-    // Purchase Button and Modal Logic
-    const purchaseButton = document.getElementById("purchase-button");
-    const paymentModal = document.getElementById("payment-modal");
-    const payButton = document.getElementById("pay-button");
-  
-    purchaseButton.addEventListener("click", () => {
-      const quantity = parseInt(ticketQuantity.value) || 0;
-      if (quantity > 0) {
-        paymentModal.style.display = "flex"; // Show modal
-      } else {
-        alert("Please select a ticket quantity before proceeding.");
-      }
-    });
-  
-    payButton.addEventListener("click", () => {
-      const name = document.getElementById("user-name").value;
-      const email = document.getElementById("user-email").value;
-      const phone = document.getElementById("user-phone").value;
-  
-      if (!name || !email || !phone) {
-        alert("Please fill in all fields.");
-        return;
-      }
-  
-      // Placeholder for payment logic
-      alert(`Thank you, ${name}! Proceeding to payment via MPesa.`);
-      paymentModal.style.display = "none"; // Close modal
-    });
-  
-    // Close Modal on outside click
-    paymentModal.addEventListener("click", (e) => {
-      if (e.target === paymentModal) {
-        paymentModal.style.display = "none";
-      }
-    });
-  </script>
-  <script>
-    const tabs = document.querySelectorAll(".tab");
-    const rows = document.querySelectorAll(".schedule-table tbody tr");
-  
-    tabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-        tabs.forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
-  
-        const filter = tab.dataset.filter;
-  
-        rows.forEach(row => {
-          if (filter === "all" || row.dataset.event.includes(filter)) {
-            row.classList.remove("hidden");
-          } else {
-            row.classList.add("hidden");
-          }
-        });
+  }
+
+  // Schedule tabs functionality
+  const tabs = document.querySelectorAll(".tab");
+  const rows = document.querySelectorAll(".schedule-table tbody tr");
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      const filter = tab.dataset.filter;
+
+      rows.forEach(row => {
+        if (filter === "all" || row.dataset.event.includes(filter)) {
+          row.classList.remove("hidden");
+        } else {
+          row.classList.add("hidden");
+        }
       });
     });
-  </script>
+  });
 
-  <script>
-   // Toggle the schedule section
-const scheduleButton = document.getElementById('schedule-button');
-const scheduleSection = document.getElementById('event-schedule');
+  // Toggle schedule and gallery sections
+  const scheduleButton = document.getElementById('schedule-button');
+  const scheduleSection = document.getElementById('event-schedule');
+  const galleryButton = document.getElementById('gallery-button');
+  const gallerySection = document.getElementById('gallery-section');
 
-scheduleButton.addEventListener('click', () => {
-  if (scheduleSection.classList.contains('hidden')) {
-    scheduleSection.classList.remove('hidden');
-    scheduleButton.textContent = 'Hide Schedule';
-  } else {
-    scheduleSection.classList.add('hidden');
-    scheduleButton.textContent = 'Schedule';
-  }
-});
-
-// Toggle the gallery section
-const galleryButton = document.getElementById('gallery-button');
-const gallerySection = document.getElementById('gallery-section');
-
-galleryButton.addEventListener('click', () => {
-  if (gallerySection.classList.contains('hidden')) {
-    gallerySection.classList.remove('hidden');
-    galleryButton.textContent = 'Hide Gallery';
-  } else {
-    gallerySection.classList.add('hidden');
-    galleryButton.textContent = 'Gallery';
-  }
-});
- </script> 
- <script>
-  // Function to generate a unique ticket number
-function generateTicketNumber() {
-  return `TICKET-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-}
-
-// Function to generate a QR code
-async function generateQRCode(data) {
-  const qrCode = await QRCode.toDataURL(data);
-  return qrCode;
-}
-
-// Purchase button logic
-document.getElementById("purchase-button").addEventListener("click", function () {
-  const quantity = parseInt(document.getElementById("ticket-quantity").value);
-  if (quantity > 0) {
-    document.getElementById("mpesa-modal").style.display = "flex"; // Show M-Pesa modal
-  } else {
-    alert("Please select a ticket quantity before proceeding.");
-  }
-});
-
-// Confirm M-Pesa payment button logic
-document.getElementById("confirm-mpesa-button").addEventListener("click", async function () {
-  const name = document.getElementById("user-name").value;
-  const email = document.getElementById("user-email").value;
-  const phone = document.getElementById("user-phone").value;
-  const ticketType = document.getElementById("ticket-type").value;
-  const quantity = parseInt(document.getElementById("ticket-quantity").value);
-
-  if (!name || !email || !phone || quantity <= 0) {
-    alert("Please fill all details correctly.");
-    return;
-  }
-
-  const totalCost = ticketType * quantity;
-  const ticketNumber = generateTicketNumber();
-
-  // Generate QR code data
-  const qrCodeData = `Ticket Number: ${ticketNumber}\nEvent: The Fearless Movement Camp\nName: ${name}\nEmail: ${email}\nPhone: ${phone}`;
-  const qrCodeImage = await generateQRCode(qrCodeData);
-
-  // Prepare ticket data
-  const ticketData = {
-  userEmail: email,
-  name: name,
-  phone: phone,
-};
-
-  // Send ticket data to the server
-  fetch("http://localhost:5000/api/purchase-ticket", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(ticketData),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        alert("Purchase successful! Check your email for the ticket.");
-        document.getElementById("mpesa-modal").style.display = "none"; // Close modal
+  if (scheduleButton && scheduleSection) {
+    scheduleButton.addEventListener('click', () => {
+      if (scheduleSection.classList.contains('hidden')) {
+        scheduleSection.classList.remove('hidden');
+        scheduleButton.textContent = 'Hide Schedule';
       } else {
-        alert("Purchase failed. Please try again.");
+        scheduleSection.classList.add('hidden');
+        scheduleButton.textContent = 'Schedule';
       }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert("An error occurred while processing your request.");
     });
-});
-
-// Close modal on outside click
-document.getElementById("mpesa-modal").addEventListener("click", function (e) {
-  if (e.target === this) {
-    this.style.display = "none";
   }
-});
-</script>
- 
-<script>
+
+  if (galleryButton && gallerySection) {
+    galleryButton.addEventListener('click', () => {
+      if (gallerySection.classList.contains('hidden')) {
+        gallerySection.classList.remove('hidden');
+        galleryButton.textContent = 'Hide Gallery';
+      } else {
+        gallerySection.classList.add('hidden');
+        galleryButton.textContent = 'Gallery';
+      }
+    });
+  }
+
   // Function to generate a unique ticket number
   function generateTicketNumber() {
     return `TICKET-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
@@ -688,88 +572,111 @@ document.getElementById("mpesa-modal").addEventListener("click", function (e) {
   }
 
   // Purchase button logic
-  document.getElementById("purchase-button").addEventListener("click", function () {
-    const quantity = parseInt(document.getElementById("ticket-quantity").value);
-    if (quantity > 0) {
-      document.getElementById("mpesa-modal").style.display = "flex"; // Show M-Pesa modal
-    } else {
-      alert("Please select a ticket quantity before proceeding.");
-    }
-  });
+  const purchaseButton = document.getElementById("purchase-button");
+  const mpesaModal = document.getElementById("mpesa-modal");
+  
+  if (purchaseButton) {
+    purchaseButton.addEventListener("click", function () {
+      const quantity = parseInt(document.getElementById("ticket-quantity").value);
+      if (quantity > 0) {
+        if (mpesaModal) {
+          mpesaModal.style.display = "flex"; // Show M-Pesa modal
+        }
+      } else {
+        alert("Please select a ticket quantity before proceeding.");
+      }
+    });
+  }
 
   // Confirm M-Pesa payment button logic
-  document.getElementById("confirm-mpesa-button").addEventListener("click", async function () {
-    const name = document.getElementById("user-name").value;
-    const email = document.getElementById("user-email").value;
-    const phone = document.getElementById("user-phone").value;
-    const ticketType = document.getElementById("ticket-type").value;
-    const quantity = parseInt(document.getElementById("ticket-quantity").value);
+  const confirmMpesaButton = document.getElementById("confirm-mpesa-button");
+  
+  if (confirmMpesaButton) {
+    confirmMpesaButton.addEventListener("click", async function () {
+      const name = document.getElementById("user-name").value;
+      const email = document.getElementById("user-email").value;
+      const phone = document.getElementById("user-phone").value;
+      const ticketType = document.getElementById("ticket-type").value;
+      const quantity = parseInt(document.getElementById("ticket-quantity").value);
 
-    if (!name || !email || !phone || quantity <= 0) {
-      alert("Please fill all details correctly.");
-      return;
-    }
+      if (!name || !email || !phone || quantity <= 0) {
+        alert("Please fill all details correctly.");
+        return;
+      }
 
-    const totalCost = ticketType * quantity;
-    const ticketNumber = generateTicketNumber();
+      const totalCost = ticketType * quantity;
+      const ticketNumber = generateTicketNumber();
 
-    // Generate QR code data
-    const qrCodeData = `Ticket Number: ${ticketNumber}\nEvent: The Fearless Movement Camp\nName: ${name}\nEmail: ${email}\nPhone: ${phone}`;
-    const qrCodeImage = await generateQRCode(qrCodeData);
+      // Generate QR code data
+      const qrCodeData = `Ticket Number: ${ticketNumber}\nEvent: The Fearless Movement Camp\nName: ${name}\nEmail: ${email}\nPhone: ${phone}`;
+      const qrCodeImage = await generateQRCode(qrCodeData);
 
-    // Prepare ticket data
-    const ticketData = {
-      name,
-      email,
-      phone,
-      ticketType,
-      quantity,
-      totalCost,
-      ticketNumber,
-      qrCodeImage,
-    };
+      // Prepare ticket data
+      const ticketData = {
+        name,
+        email,
+        phone,
+        ticketType,
+        quantity,
+        totalCost,
+        ticketNumber,
+        qrCodeImage,
+      };
 
-    // Send ticket data to the server
-    fetch("http://localhost:5000/api/purchase-ticket", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(ticketData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          alert("Purchase successful! Check your email for the ticket.");
-          document.getElementById("mpesa-modal").style.display = "none"; // Close modal
-        } else {
-          alert("Purchase failed. Please try again.");
-        }
+      // Send ticket data to the server
+      fetch("http://localhost:5000/api/purchase-ticket", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(ticketData),
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert("An error occurred while processing your request.");
-      });
-  });
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert("Purchase successful! Check your email for the ticket.");
+            mpesaModal.style.display = "none"; // Close modal
+          } else {
+            alert("Purchase failed. Please try again.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("An error occurred while processing your request.");
+        });
+    });
+  }
 
   // Close modal on outside click
-  document.getElementById("mpesa-modal").addEventListener("click", function (e) {
-    if (e.target === this) {
-      this.style.display = "none";
-    }
-  });
+  if (mpesaModal) {
+    mpesaModal.addEventListener("click", function (e) {
+      if (e.target === this) {
+        this.style.display = "none";
+      }
+    });
+  }
 
   // Function to show snackbar
   function showSnackbar(message, type = 'success') {
     const snackbar = document.getElementById('snackbar');
-    snackbar.textContent = message;
-    snackbar.className = `snackbar ${type} show`;
+    if (snackbar) {
+      snackbar.textContent = message;
+      snackbar.className = `snackbar ${type} show`;
 
-    // Hide after 3 seconds
-    setTimeout(() => {
-      snackbar.className = 'snackbar';
-    }, 3000);
+      // Hide after 3 seconds
+      setTimeout(() => {
+        snackbar.className = 'snackbar';
+      }, 3000);
+    }
   }
+
+  // Make functions available globally
+  window.toggleMenu = toggleMenu;
+  window.toggleDescription = toggleDescription;
+  window.showSnackbar = showSnackbar;
+  window.generateTicketNumber = generateTicketNumber;
+  window.generateQRCode = generateQRCode;
+});
 </script>
 
 </body>

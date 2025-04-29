@@ -409,9 +409,9 @@
             <h4>Get In Touch</h4>
             <ul>
                 <li><i class="fas fa-map-marker-alt"></i> 04, Funzi Road Nairobi</li>
-                <li><i class="fas fa-phone"></i> 0745214040</li>
-                <li><i class="fas fa-phone"></i> 0792173752</li>
-                <li><i class="fas fa-envelope"></i> mukanjilewis94@gmail.com</li>
+                <li><i class="fas fa-phone"></i> +254 710 899453</li>
+                <li><i class="fas fa-phone"></i> +254 710 899453</li>
+                <li><i class="fas fa-envelope"></i> thefearlessmovement1@gmail.com</li>
             </ul>
         </div>
     
@@ -429,57 +429,65 @@
     }
 
     document.getElementById("contactForm").addEventListener("submit", async function(event) {
-        event.preventDefault();
-        
-       // Get form values
-       const formData = {
+    event.preventDefault();
+    
+    // Get form elements
+    const form = this;
+    const submitButton = form.querySelector('button[type="submit"]');
+    const responseMessage = document.getElementById("responseMessage");
+    const originalButtonText = submitButton.textContent;
+
+    // Show loading state
+    submitButton.disabled = true;
+    submitButton.textContent = 'Sending...';
+    responseMessage.textContent = '';
+    responseMessage.style.color = '';
+
+    try {
+        // Get form values
+        const formData = {
             to: "thefearlessmovement1@gmail.com",
             subject: "New Contact Form Submission",
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            message: document.getElementById('message').value
+            name: document.getElementById('name').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            message: document.getElementById('message').value.trim()
         };
 
-        // Show loading state
-        const submitButton = this.querySelector('button[type="submit"]');
-        const originalButtonText = submitButton.textContent;
-        submitButton.disabled = true;
-        submitButton.textContent = 'Sending...';
-        
-        // Clear previous message
-        const responseMessage = document.getElementById("responseMessage");
-        responseMessage.textContent = '';
-        
-        try {
-            const response = await fetch("http://localhost:5000/api/submit-form", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-            });
-            
-            const data = await response.json();
-            
-            if (data.success) {
-                responseMessage.style.color = '#4CAF50';
-                responseMessage.textContent = "Thank you! Your message has been sent successfully.";
-                this.reset(); // Clear form
-            } else {
-                throw new Error(data.message || "Error sending message");
-            }
-        } catch (error) {
-            responseMessage.style.color = '#f44336';
-            responseMessage.textContent = error.message || "Error sending message. Please try again later.";
-            console.error('Error:', error);
-        } finally {
-            // Restore button state
-            submitButton.disabled = false;
-            submitButton.textContent = originalButtonText;
+        // Basic validation
+        if (!formData.name || !formData.email || !formData.phone || !formData.message) {
+            throw new Error("Please fill in all fields");
         }
-    });
-</script>
+
+        const response = await fetch("http://localhost:5000/api/submit-form", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || "Error sending message");
+        }
+
+        // Success
+        responseMessage.style.color = '#4CAF50';
+        responseMessage.textContent = "Thank you! Your message has been sent successfully.";
+        form.reset();
+        
+    } catch (error) {
+        responseMessage.style.color = '#f44336';
+        responseMessage.textContent = error.message || "Error sending message. Please try again later.";
+        console.error('Error:', error);
+    } finally {
+        // Restore button state
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
+    }
+});
 </script>
 
 </body>
