@@ -508,12 +508,11 @@ app.post('/api/send-order', async (req, res) => {
 });
 
 // Route to handle ticket purchases
-// Route to handle ticket purchases
 app.post('/api/purchase-ticket', async (req, res) => {
     try {
-        const { name, email, phone, ticketType, quantity, totalCost } = req.body;
+        const { name, email, phone, ticketType, quantity, totalCost, eventId } = req.body;
 
-        if (!name || !email || !phone || !ticketType || !quantity || !totalCost) {
+        if (!name || !email || !phone || !ticketType || !quantity || !totalCost || !eventId) {
             return res.status(400).json({
                 success: false,
                 message: 'All fields are required.'
@@ -527,43 +526,73 @@ app.post('/api/purchase-ticket', async (req, res) => {
         const qrCodeData = `Ticket Number: ${ticketNumber}\nEvent: The Fearless Movement Camp\nName: ${name}\nEmail: ${email}\nPhone: ${phone}`;
         const qrCodeImage = await QRCode.toDataURL(qrCodeData);
 
-        // Save ticket to database
-        const sql = 'INSERT INTO tickets (user_email, ticket_number, qr_code) VALUES (?, ?, ?)';
-        db.query(sql, [email, ticketNumber, qrCodeImage], (err, result) => {
-            if (err) {
-                console.error('Error saving ticket to database:', err);
-                return res.status(500).json({
-                    success: false,
-                    message: 'Failed to save ticket'
-                });
-            }
+        // First, get the ticket_id from event_tickets table based on the ticket type
+        db.query('SELECT id FROM event_tickets WHERE event_id = ? AND ticket_type = ?', 
+            [eventId, ticketType], (err, ticketResults) => {
+                if (err || ticketResults.length === 0) {
+                    console.error('Error finding ticket type:', err || 'Ticket type not found');
+                    return res.status(500).json({
+                        success: false,
+                        message: 'Failed to find matching ticket type'
+                    });
+                }
 
-            // Send email with ticket details
-            const templateData = {
-                name,
-                email,
-                phone,
-                ticketType,
-                quantity,
-                totalCost,
-                ticketNumber,
-                qrCodeImage,
-            };
+                const ticketId = ticketResults[0].id;
 
-            sendEmail(
-                email,
-                'Your Ticket Purchase Confirmation',
-                templateData,
-                'ticket'
-            );
+                // Save to both tickets table (for backward compatibility) and event_purchases table
+                db.query('INSERT INTO tickets (user_email, ticket_number, qr_code) VALUES (?, ?, ?)', 
+                    [email, ticketNumber, qrCodeImage], (err, ticketResult) => {
+                        if (err) {
+                            console.error('Error saving to tickets table:', err);
+                        }
 
-            res.status(200).json({
-                success: true,
-                message: 'Ticket purchased successfully',
-                ticketNumber,
-                qrCodeImage,
+                        // Insert into event_purchases table for admin panel display
+                        const purchaseSql = `
+                            INSERT INTO event_purchases 
+                            (event_id, ticket_id, name, email, phone, ticket_number) 
+                            VALUES (?, ?, ?, ?, ?, ?)
+                        `;
+                        
+                        db.query(purchaseSql, 
+                            [eventId, ticketId, name, email, phone, ticketNumber], 
+                            (err, purchaseResult) => {
+                                if (err) {
+                                    console.error('Error saving to event_purchases:', err);
+                                    return res.status(500).json({
+                                        success: false,
+                                        message: 'Failed to save ticket purchase'
+                                    });
+                                }
+
+                                // Send email with ticket details
+                                const templateData = {
+                                    name,
+                                    email,
+                                    phone,
+                                    ticketType,
+                                    quantity,
+                                    totalCost,
+                                    ticketNumber,
+                                    qrCodeImage,
+                                };
+
+                                sendEmail(
+                                    email,
+                                    'Your Ticket Purchase Confirmation',
+                                    templateData,
+                                    'ticket'
+                                );
+
+                                res.status(200).json({
+                                    success: true,
+                                    message: 'Ticket purchased successfully',
+                                    ticketNumber,
+                                    qrCodeImage,
+                                });
+                            });
+                    });
             });
-        });
+        
     } catch (error) {
         console.error('Error processing ticket purchase:', error);
         res.status(500).json({
@@ -573,6 +602,7 @@ app.post('/api/purchase-ticket', async (req, res) => {
         });
     }
 });
+
 // Route to handle donation submissions
 app.post('/api/send-donation', async (req, res) => {
     try {
@@ -1498,7 +1528,7 @@ app.get('/api/events', (req, res) => {
   });
   
   // Get recent purchases
-  app.get('/api/tickets/purchases', (req, res) => {
+  app.get('/api/purchase-ticket', (req, res) => {
     const query = `
       SELECT 
         ep.id,

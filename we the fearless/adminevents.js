@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const totalEventsEl = document.getElementById('total-events');
   const totalRevenueEl = document.getElementById('total-revenue');
   const totalTicketsEl = document.getElementById('total-tickets');
+  const eventPosterInput = document.getElementById('event-poster');
+  const posterPreview = document.getElementById('poster-preview');
   
   // State variables
   let currentPage = 1;
@@ -29,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let purchases = [];
   let currentEventId = null;
   let confirmAction = null;
+  let posterFile = null;
 
   // Helper function to get auth token
   function getAuthToken() {
@@ -49,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initialize the admin panel
   initAdminPanel();
   
-  // Event Listeners [unchanged]
+  // Event Listeners
   addEventBtn.addEventListener('click', openAddEventModal);
   eventForm.addEventListener('submit', handleEventFormSubmit);
   cancelEventBtn.addEventListener('click', () => eventModal.style.display = 'none');
@@ -62,13 +65,36 @@ document.addEventListener('DOMContentLoaded', function() {
   exportPurchasesBtn.addEventListener('click', exportPurchases);
   selectAllCheckbox.addEventListener('change', toggleSelectAll);
   
-  // Close modals when clicking outside [unchanged]
+  // Add event listener for poster file input
+  eventPosterInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      posterFile = file;
+      displayPosterPreview(file);
+    }
+  });
+  
+  // Function to display poster preview
+  function displayPosterPreview(file) {
+    if (!file) {
+      posterPreview.innerHTML = '';
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      posterPreview.innerHTML = `<img src="${e.target.result}" alt="Event Poster Preview">`;
+    };
+    reader.readAsDataURL(file);
+  }
+  
+  // Close modals when clicking outside
   window.addEventListener('click', (e) => {
     if (e.target === eventModal) eventModal.style.display = 'none';
     if (e.target === confirmModal) confirmModal.style.display = 'none';
   });
   
-  // Close modals with close buttons [unchanged]
+  // Close modals with close buttons
   closeModalBtns.forEach(btn => {
     btn.addEventListener('click', function() {
       const modal = this.closest('.modal');
@@ -76,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  // Initialize admin panel [unchanged]
+  // Initialize admin panel
   function initAdminPanel() {
     loadEvents();
     loadTicketSales();
@@ -84,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initTicketSalesChart();
   }
   
-  // Load events from API [updated with auth headers]
+  // Load events from API
   function loadEvents() {
     fetch('http://localhost:5000/api/events', {
       headers: getHeaders(),
@@ -109,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Render events in the grid [unchanged]
+  // Render events in the grid
   function renderEvents() {
     eventsGrid.innerHTML = '';
     
@@ -122,6 +148,14 @@ document.addEventListener('DOMContentLoaded', function() {
       const eventCard = document.createElement('div');
       eventCard.className = 'event-card';
       
+      // Ensure poster path is complete
+      let posterUrl = event.poster ? event.poster : 'img/default-event.jpg';
+      
+      // Check if the poster URL is relative and doesn't start with the API base URL
+      if (posterUrl && !posterUrl.startsWith('http') && !posterUrl.startsWith('/')) {
+        posterUrl = `http://localhost:5000/${posterUrl}`;
+      }
+      
       let statusClass = '';
       switch(event.status) {
         case 'upcoming': statusClass = 'status-upcoming'; break;
@@ -131,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       eventCard.innerHTML = `
-        <img src="${event.poster || 'img/default-event.jpg'}" alt="${event.name}" class="event-poster">
+        <img src="${posterUrl}" alt="${event.name}" class="event-poster" onerror="this.onerror=null; this.src='img/default-event.jpg';">
         <div class="event-details">
           <h3 class="event-name">${event.name}</h3>
           <div class="event-meta">
@@ -153,25 +187,33 @@ document.addEventListener('DOMContentLoaded', function() {
       eventsGrid.appendChild(eventCard);
     });
     
+    // Add event listeners for edit and delete buttons
     document.querySelectorAll('.edit-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => openEditEventModal(e.target.dataset.id));
+      btn.addEventListener('click', function(e) {
+        const id = this.getAttribute('data-id');
+        openEditEventModal(id);
+      });
     });
     
     document.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => confirmDeleteEvent(e.target.dataset.id));
+      btn.addEventListener('click', function(e) {
+        const id = this.getAttribute('data-id');
+        confirmDeleteEvent(id);
+      });
     });
   }
   
-  // Open modal to add new event [unchanged]
+  // Open modal to add new event
   function openAddEventModal() {
     document.getElementById('modal-title').textContent = 'Add New Event';
     document.getElementById('event-id').value = '';
     document.getElementById('event-form').reset();
     document.getElementById('poster-preview').innerHTML = '';
+    posterFile = null;
     eventModal.style.display = 'block';
   }
   
-  // Open modal to edit event [unchanged]
+  // Open modal to edit event
   function openEditEventModal(eventId) {
     const event = events.find(e => e.id == eventId);
     if (!event) return;
@@ -181,13 +223,23 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('event-name').value = event.name;
     document.getElementById('event-date').value = event.date.split('T')[0];
     document.getElementById('event-venue').value = event.venue;
-    document.getElementById('event-description').value = event.description;
+    document.getElementById('event-description').value = event.description || '';
     document.getElementById('event-capacity').value = event.capacity;
     document.getElementById('event-status').value = event.status;
     
-    const posterPreview = document.getElementById('poster-preview');
+    // Reset poster file and preview
+    posterFile = null;
+    
+    // Handle poster preview for existing event
     if (event.poster) {
-      posterPreview.innerHTML = `<img src="${event.poster}" alt="Event Poster">`;
+      let posterUrl = event.poster;
+      
+      // Ensure the poster URL is complete
+      if (!posterUrl.startsWith('http') && !posterUrl.startsWith('/')) {
+        posterUrl = `http://localhost:5000/${posterUrl}`;
+      }
+      
+      posterPreview.innerHTML = `<img src="${posterUrl}" alt="Event Poster" onerror="this.onerror=null; this.src='img/default-event.jpg';">`;
     } else {
       posterPreview.innerHTML = '<p>No poster uploaded</p>';
     }
@@ -195,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function() {
     eventModal.style.display = 'block';
   }
   
-  // Handle event form submission [updated with proper headers]
+  // Handle event form submission
   function handleEventFormSubmit(e) {
     e.preventDefault();
     
@@ -209,9 +261,16 @@ document.addEventListener('DOMContentLoaded', function() {
     formData.append('capacity', document.getElementById('event-capacity').value);
     formData.append('status', document.getElementById('event-status').value);
     
+    // Get the poster file
     const posterFile = document.getElementById('event-poster').files[0];
     if (posterFile) {
       formData.append('poster', posterFile);
+    }
+    
+    // Log the formData contents for debugging
+    console.log('Sending form data:');
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
     }
     
     const url = eventId ? `http://localhost:5000/api/events/${eventId}` : 'http://localhost:5000/api/events';
@@ -221,6 +280,7 @@ document.addEventListener('DOMContentLoaded', function() {
       method: method,
       headers: {
         'Authorization': `Bearer ${getAuthToken()}`
+        // Note: Don't set Content-Type header when sending FormData
       },
       body: formData
     })
@@ -231,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(data => {
       if (data.success) {
         showSnackbar(`Event ${eventId ? 'updated' : 'added'} successfully!`, 'success');
-        loadEvents();
+        loadEvents(); // Reload events to display the updated data
         eventModal.style.display = 'none';
       } else {
         showSnackbar(`Failed to ${eventId ? 'update' : 'add'} event: ${data.message}`, 'error');
@@ -243,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Confirm event deletion [unchanged]
+  // Confirm event deletion
   function confirmDeleteEvent(eventId) {
     currentEventId = eventId;
     confirmAction = 'deleteEvent';
@@ -251,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
     confirmModal.style.display = 'block';
   }
   
-  // Handle confirm action [unchanged]
+  // Handle confirm action
   function handleConfirmAction() {
     if (confirmAction === 'deleteEvent') {
       deleteEvent(currentEventId);
@@ -259,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function() {
     confirmModal.style.display = 'none';
   }
   
-  // Delete event [updated with auth headers]
+  // Delete event
   function deleteEvent(eventId) {
     fetch(`http://localhost:5000/api/events/${eventId}`, {
       method: 'DELETE',
@@ -283,7 +343,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Load ticket sales data [updated with auth headers]
+  // Load ticket sales data
   function loadTicketSales() {
     fetch('http://localhost:5000/api/events/sales', {
       headers: getHeaders()
@@ -306,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Render ticket sales in table [unchanged]
+  // Render ticket sales in table
   function renderTicketSales(sales) {
     eventsSalesBody.innerHTML = '';
     
@@ -337,14 +397,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Update sales statistics [unchanged]
+  // Update sales statistics
   function updateSalesStats(stats) {
     totalEventsEl.textContent = stats.total_events;
     totalRevenueEl.textContent = `KES ${stats.total_revenue}`;
     totalTicketsEl.textContent = stats.total_tickets;
   }
   
-  // Initialize ticket sales chart [unchanged]
+  // Initialize ticket sales chart
   function initTicketSalesChart() {
     const ctx = document.getElementById('ticket-sales-chart').getContext('2d');
     const chartData = {
@@ -376,9 +436,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Load recent purchases [updated with auth headers]
+  // Load recent purchases
   function loadRecentPurchases() {
-    fetch('http://localhost:5000/api/tickets/purchases', {
+    fetch('http://localhost:5000/api/purchase-ticket', {
       headers: getHeaders(),
       method: 'GET'
     })
@@ -402,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Render purchases in table [unchanged]
+  // Render purchases in table
   function renderPurchases() {
     purchasesBody.innerHTML = '';
     
@@ -461,30 +521,37 @@ document.addEventListener('DOMContentLoaded', function() {
       purchasesBody.appendChild(row);
     });
     
+    // Add event listeners for confirm and view buttons
     document.querySelectorAll('.confirm-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => confirmPurchase(e.target.closest('button').dataset.id));
+      btn.addEventListener('click', function() {
+        const id = this.getAttribute('data-id');
+        confirmPurchase(id);
+      });
     });
     
     document.querySelectorAll('.view-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => viewPurchase(e.target.closest('button').dataset.id));
+      btn.addEventListener('click', function() {
+        const id = this.getAttribute('data-id');
+        viewPurchase(id);
+      });
     });
   }
   
-  // Filter purchases [unchanged]
+  // Filter purchases
   function filterPurchases() {
     currentPage = 1;
     renderPurchases();
     updatePagination();
   }
   
-  // Update pagination controls [unchanged]
+  // Update pagination controls
   function updatePagination() {
     pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
     prevPageBtn.disabled = currentPage === 1;
     nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
   }
   
-  // Go to previous page [unchanged]
+  // Go to previous page
   function goToPrevPage() {
     if (currentPage > 1) {
       currentPage--;
@@ -493,7 +560,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Go to next page [unchanged]
+  // Go to next page
   function goToNextPage() {
     if (currentPage < totalPages) {
       currentPage++;
@@ -502,7 +569,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Toggle select all checkboxes [unchanged]
+  // Toggle select all checkboxes
   function toggleSelectAll() {
     const checkboxes = document.querySelectorAll('.purchase-checkbox');
     checkboxes.forEach(checkbox => {
@@ -510,13 +577,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Get selected purchase IDs [unchanged]
+  // Get selected purchase IDs
   function getSelectedPurchaseIds() {
     const checkboxes = document.querySelectorAll('.purchase-checkbox:checked');
     return Array.from(checkboxes).map(checkbox => checkbox.dataset.id);
   }
   
-  // Confirm purchase [updated with auth headers and proper body]
+  // Confirm purchase
   function confirmPurchase(purchaseId) {
     fetch(`http://localhost:5000/api/tickets/confirm/${purchaseId}`, {
       method: 'POST',
@@ -541,7 +608,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // View purchase details [unchanged]
+  // View purchase details
   function viewPurchase(purchaseId) {
     const purchase = purchases.find(p => p.id == purchaseId);
     if (purchase) {
@@ -549,7 +616,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Export purchases [updated with proper download handling]
+  // Export purchases
   function exportPurchases() {
     const selectedIds = getSelectedPurchaseIds();
     const eventId = eventFilter.value;
@@ -584,7 +651,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Populate event filter dropdown [unchanged]
+  // Populate event filter dropdown
   function populateEventFilter() {
     eventFilter.innerHTML = '<option value="all">All Events</option>';
     events.forEach(event => {
@@ -595,7 +662,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Get status class for styling [unchanged]
+  // Get status class for styling
   function getStatusClass(status) {
     switch(status.toLowerCase()) {
       case 'upcoming': return 'status-upcoming';
@@ -606,13 +673,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Format date for display [unchanged]
+  // Format date for display
   function formatDate(dateString) {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   }
   
-  // Format date and time for display [unchanged]
+  // Format date and time for display
   function formatDateTime(dateTimeString) {
     const options = { 
       year: 'numeric', 
@@ -624,7 +691,7 @@ document.addEventListener('DOMContentLoaded', function() {
     return new Date(dateTimeString).toLocaleDateString(undefined, options);
   }
   
-  // Show snackbar notification [unchanged]
+  // Show snackbar notification
   function showSnackbar(message, type = 'success') {
     const snackbar = document.getElementById('snackbar');
     snackbar.textContent = message;
@@ -634,7 +701,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 3000);
   }
   
-  // Logout functionality [unchanged]
+  // Logout functionality
   document.getElementById('logout-btn').addEventListener('click', function() {
     localStorage.removeItem('authToken');
     window.location.href = 'admin-login.html';
